@@ -6,12 +6,24 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/normalize.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script src="modjool.js"></script>
     <script src="components/custom-element.js"></script>
+    <style>
+      button { font-size: 21px; }
+    </style>
   </head>
   <body>
     <h1>Simple web components</h1>
-    <custom-element></custom-element>
+    <custom-el WIDTH="600px" amount="7" fruit="lemon"><span slot="cool">s</span></custom-el>
     <my-paragraph test="">banana</my-paragraph>
+
+    <div x-data="{ tab: 'foo' }">
+      <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
+      <button :class="{ 'active': tab === 'bar' }" @click="tab = 'bar'">Bar</button>
+  
+      <div x-show="tab === 'foo'">Tab Foo</div>
+      <div x-show="tab === 'bar'">Tab Bar</div>
+  </div>
   </body>
 </html>

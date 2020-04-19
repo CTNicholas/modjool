@@ -7,15 +7,42 @@ Modjool({
   },
 
   html: ({ URL, TOOLTIP, SLOT }) => `
-    <a href="${URL}">${SLOT}</a>
-    <span id="spanTooltip">${TOOLTIP}</span>
+    <a ref="link" href="${URL}">${SLOT}</a>
+    <span ref="tooltip" id="spanTooltip">${TOOLTIP}</span>
   `,
 
-  data: () => ({
-    linkClicked: false
+  data: ({ CLICKS, data }) => ({
+    linkClicked: false,
+    baseClicks: 10,
+    totalClicks: data.baseClicks + CLICKS,
+    clickCalc: ({ CLICKS, data }) => {
+      let val = data.baseClicks * data.totalClicks
+      if (data.linkClicked) {
+        val += 10
+      } else {
+        val -= 5
+      }
+      return val
+    }
   }),
 
+  data2: ({ CLICKS }) => {
+    const linkClicked = false
+    const baseClicks = 10
+    const totalClicks = baseClicks + CLICKS
+    return [linkClicked, baseClicks, totalClicks]
+  },
+
   events: {
+    'a @ click mouseover': ({ data }) => {
+      data.linkClicked = true
+    },
+    '#spanTooltip @ mouseover mouseout': () => {
+
+    }
+  },
+
+  events2: {
     'a.link': {
       click: ({ linkClicked, spanTooltip }) => {
         linkClicked = false

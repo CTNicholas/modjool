@@ -1,29 +1,41 @@
 /* global Modjool */
 Modjool({
   options: {
-    name: 'custom-element',
-    extend: 'h1'
+    name: 'custom-el',
+    reactiveAttributes: ['WIDTH', 'AMOUNT']
   },
 
   html: ({ FRUIT, AMOUNT }) => `
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+    <script src="helloalert.js"></script>
     <div>
       <button class="go" type="submit">${AMOUNT} ${FRUIT + (AMOUNT > 1 ? 's' : '')}</button>
       <button class="stop">Cancel</button>
     </div>
+    <div x-data="{ tab: 'foo' }">
+      <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
+      <button :class="{ 'active': tab === 'bar' }" @click="tab = 'bar'">Bar</button>
+
+      <div x-show="tab === 'foo'">Tab Foo</div>
+      <div x-show="tab === 'bar'">Tab Bar</div>
+    </div>
   `,
 
   css: ({ WIDTH }) => `
-    div {
+    :host {
+      display: block;
+    }
+
+    .go {
       classes: "bg-grey-100 text-lg";
       margin-top: 6px;
       height: 100px;
-      width: 500px;
+      width: ${WIDTH};
       background: red;
     }
 
     .go, .stop {
       classes: "m-4 font-bold bg-grey-700 text-white";
-      max-width: ${WIDTH};
       border: 7px solid #808080;
     }
 
