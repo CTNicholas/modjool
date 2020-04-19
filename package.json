@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"serve": "(cd ./src && browser-sync start --server --watch --files ./)"
+    "serve": "(cd ./src && browser-sync start --server --watch --files ./)"
   },
   "author": "CTNicholas",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "normalize": "^0.3.1"
+  }
 }
