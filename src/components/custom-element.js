@@ -1,4 +1,5 @@
-/* global Modjool */
+import Modjool from '../modjool.js'
+
 Modjool({
   options: () => ({
     name: 'custom-el',
@@ -12,7 +13,6 @@ Modjool({
 
   html: ({ FRUIT, AMOUNT }) => `
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
-    <script src="helloalert.js"></script>
     <div>
       <button class="go" type="submit">${AMOUNT} ${FRUIT + (AMOUNT > 1 ? 's' : '')}</button>
       <button class="stop">Cancel</button>
