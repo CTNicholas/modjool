@@ -1,12 +1,13 @@
 /* global Modjool */
 Modjool({
-  options: {
+  options: () => ({
     name: 'custom-el',
+    inherit: true,
     attributes: ['WIDTH', 'AMOUNT']
-  },
+  }),
 
   loaded () {
-    alert('hi')
+    console.log('Loaded')
   },
 
   html: ({ FRUIT, AMOUNT }) => `
