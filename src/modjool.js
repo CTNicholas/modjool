@@ -7,10 +7,21 @@ class ModjoolHead extends HTMLElement {
   }
 
   connectedCallback () {
+    console.log('modjool-head loaded')
     this.shadowRoot.innerHTML = `
     <style>
       :host {
-        inherit: all;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        visibility: hidden;
+        position: absolute;
+        left: -1000px;
+        top: -1000px;
+        margin: -1px;
+        padding: 0;
+        clip: rect(0 0 0 0);
+        overflow: hidden;
       }
     </style>
     <slot>
@@ -19,6 +30,27 @@ class ModjoolHead extends HTMLElement {
   }
 }
 customElements.define('modjool-head', ModjoolHead)
+
+class ModjoolBody extends HTMLElement {
+  constructor () {
+    super()
+    // this.attachShadow({ mode: 'open' })
+  }
+
+  connectedCallback () {
+    console.log('modjool-head loaded')
+    this.innerHTML = `
+    <style>
+      :host {
+        all: inherit;
+      }
+    </style>
+    <slot>
+    </slot>
+    `
+  }
+}
+customElements.define('modjool-body', ModjoolBody)
 
 function newModjoolElement ({ options, html, css, loaded }) {
   return function () {
@@ -39,7 +71,9 @@ function newModjoolElement ({ options, html, css, loaded }) {
 
       connectedCallback () {
         this.getAttributes()
-        this.getBody().appendChild(document.createElement('style'))
+        this.getBody().appendChild(document.createElement('modjool-body'))
+        this.mj_body = this.getBody().querySelector('modjool-body')
+        console.log('body:', this.mj_body)
         this.updateAll()
         console.log(this)
         loaded()
@@ -71,19 +105,21 @@ function newModjoolElement ({ options, html, css, loaded }) {
 
       updateStyle () {
         const cssContent = css({ ...this.mj_attr })
-        let hasClasses = false
+        /* let hasClasses = false
         if (cssContent.trim().includes('classes:')) {
           hasClasses = true
         }
-        console.log(hasClasses, 'classes?')
+        console.log(hasClasses, 'classes?') */
         this.getBody().querySelector('style').textContent = cssContent
         this.mj_lastStyle = cssContent
       }
 
       updateTemplate () {
-        this.getBody().innerHTML = html({ ...this.mj_attr })
-        this.getBody().classList.add('wwwooo')
-        this.getBody().appendChild(document.createElement('style')).textContent = this.mj_lastStyle
+        if (this.isConnected) {
+          this.mj_body.innerHTML = html({ ...this.mj_attr })
+          this.getBody().classList.add('wwwooo')
+          this.getBody().appendChild(document.createElement('style')).textContent = this.mj_lastStyle
+        }
       }
 
       setupOptions () {

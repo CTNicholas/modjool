@@ -16,6 +16,7 @@ Modjool({
     <div>
       <button class="go" type="submit">${AMOUNT} ${FRUIT + (AMOUNT > 1 ? 's' : '')}</button>
       <button class="stop">Cancel</button>
+      Cool: <slot name="cool"></slot>
     </div>
     <div x-data="{ tab: 'foo' }">
       <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
