@@ -1,11 +1,11 @@
 const defaultOptions = {
   name: 'no-name',
   inherit: true,
-  reactiveAttributes: []
+  attributes: []
 }
 
 /* global customElements, HTMLElement */
-function newModjoolElement ({ options, html, css }) {
+function newModjoolElement ({ options, html, css, loaded }) {
   class ModjoolElement extends HTMLElement {
     constructor () {
       super()
@@ -20,16 +20,18 @@ function newModjoolElement ({ options, html, css }) {
       this.getAttributes()
       this.getBody().appendChild(document.createElement('style'))
       this.updateAll()
+      console.log(this)
+      loaded()
     }
 
     static get observedAttributes () {
-      return options.reactiveAttributes.map(attr => attr.toLowerCase())
+      return options.attributes.map(attr => attr.toLowerCase())
     }
 
     getAttributes () {
-      for (let i = 0; i < this.getBody().attributes.length; i++) {
-        const prop = this.getBody().attributes[i].nodeName.toUpperCase()
-        const val = this.getBody().attributes[i].nodeValue
+      for (let i = 0; i < this.attributes.length; i++) {
+        const prop = this.attributes[i].nodeName.toUpperCase()
+        const val = this.attributes[i].nodeValue
         this.mj_attr[prop] = val
       }
       console.log(this.mj_attr)

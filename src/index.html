@@ -15,9 +15,11 @@
   </head>
   <body>
     <h1>Simple web components</h1>
-    <custom-el WIDTH="600px" amount="7" fruit="lemon"><span slot="cool">s</span></custom-el>
-    <my-paragraph test="">banana</my-paragraph>
-
+    <h2>Component</h2>
+    <custom-el width="600px" amount="7" fruit="lemon"><span slot="cool">s</span></custom-el>
+    <custom-el width="200px" amount="4" fruit="apple"></custom-el>
+    <mj-dropdown options="apple,banana,cherry,date"></mj-dropdown>
+    <h2>Not component</h2>
     <div x-data="{ tab: 'foo' }">
       <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
       <button :class="{ 'active': tab === 'bar' }" @click="tab = 'bar'">Bar</button>

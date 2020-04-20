@@ -2,7 +2,11 @@
 Modjool({
   options: {
     name: 'custom-el',
-    reactiveAttributes: ['WIDTH', 'AMOUNT']
+    attributes: ['WIDTH', 'AMOUNT']
+  },
+
+  loaded () {
+    alert('hi')
   },
 
   html: ({ FRUIT, AMOUNT }) => `
