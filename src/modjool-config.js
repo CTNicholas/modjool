@@ -1,5 +1,6 @@
 export default {
   name: 'no-name',
   inherit: true,
-  attributes: []
+  attributes: [],
+  privateId: true
 }

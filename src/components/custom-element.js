@@ -27,12 +27,13 @@ Modjool({
     </div>
   `,
 
-  css: ({ WIDTH }) => `
+  css: ({ WIDTH, mj }) => `
     :host {
       display: block;
+      background:yellow;
     }
 
-    .go {
+    ${mj.privateCss} .go {
       classes: "bg-grey-100 text-lg";
       margin-top: 6px;
       height: 100px;

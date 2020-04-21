@@ -1,13 +1,16 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/modjool.js',
-  devServer: {
-    contentBase: './dist'
+  entry: {
+    main: './src/modjool.js',
+    CustomElementExample: './src/components/example.js'
   },
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  devServer: {
+    contentBase: './dist'
   },
   module: {
     rules: [
