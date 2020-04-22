@@ -3,13 +3,56 @@
 // <link-to url="inki.uk" tooltip="A place to learn"></link-to>
 Modjool({
   options: {
-    name: 'link-to'
+    name: 'link-to',
+    attributes: {
+      CLICKS: null,
+      WIDTH: String,
+      AMOUNT: {
+        type: Array,
+        separator: ',',
+        reactive: false
+      },
+      DISPLAY: Boolean,
+      DOTHING: Function // dothing="x, y => x + y"
+    }
   },
 
-  html: ({ URL, TOOLTIP, SLOT }) => `
+  html: ({ DOTHING, DISPLAY, USERNAMES, URL, TOOLTIP, SLOT, mj, eachClick }) => `
     <a ref="link" href="${URL}">${SLOT}</a>
     <span ref="tooltip" id="spanTooltip">${TOOLTIP}</span>
+    ${eachClick}
+    ${USERNAMES.map(name => `<div style="background-color: coral;">${name}</div>`)}
+
+    ${USERNAMES.for(name => `
+      <div style="background-color: coral;">${name}</div>
+    `)}  
+
+    ${DISPLAY === true
+      ? `Message displayed if true: ${DISPLAY}` : ''
+    }
+
+    ${DISPLAY === true
+      ? `Message displayed if true: ${DISPLAY}`
+      : `Message if false: ${DISPLAY}`
+    }
+
+    ${USERNAMES.for(name => `
+      <div>${DOTHING(name, TOOLTIP)}</div> <!-- return new Function('x', 'y', 'x + y') -->
+    `)}  
+
+
+    ${USERNAMES}
   `,
+
+  for: {
+    eachClick: (click, CLICKS, { mjCount, mjKey }) => `
+      <a href="">Click value is ${click}</a>
+    `,
+    eachUrl: (url, URL) => {
+      url = url.toString()
+      return url
+    }
+  },
 
   data: ({ CLICKS, data }) => ({
     linkClicked: false,

@@ -1,5 +1,4 @@
-import Modjool from '../modjool.js'
-
+/* global Modjool */
 Modjool({
   options: () => ({
     name: 'custom-el',
@@ -11,17 +10,17 @@ Modjool({
     console.log('Loaded')
   },
 
-  html: ({ FRUIT, AMOUNT }) => `
+  html: ({ FRUIT, AMOUNT, mj }) => `
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
     <div>
       <button class="go" type="submit">${AMOUNT} ${FRUIT + (AMOUNT > 1 ? 's' : '')}</button>
       <button class="stop">Cancel</button>
       Cool: <slot name="cool"></slot>
+      
     </div>
     <div x-data="{ tab: 'foo' }">
       <button :class="{ 'active': tab === 'foo' }" @click="tab = 'foo'">Foo</button>
       <button :class="{ 'active': tab === 'bar' }" @click="tab = 'bar'">Bar</button>
-
       <div x-show="tab === 'foo'">Tab Foo</div>
       <div x-show="tab === 'bar'">Tab Bar</div>
     </div>
@@ -33,7 +32,7 @@ Modjool({
       background:yellow;
     }
 
-    ${mj.privateCss} .go {
+    ${mj.select} .go {
       classes: "bg-grey-100 text-lg";
       margin-top: 6px;
       height: 100px;
