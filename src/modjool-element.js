@@ -1,25 +1,37 @@
-/* global customElements, HTMLElement */
+/* global customElements, HTMLElement, MutationObserver */
 import defaultOptions from './modjool-config.js'
+import mjGetSlots from './methods/getSlots.js'
+import mjUpdateTemplate from './methods/updateTemplate.js'
+import mjUpdateStyle from './methods/updateStyle.js'
 
-export default function newModjoolElement ({
-  options = {},
-  html = '',
-  css = '',
-  loaded = () => {}
-}) {
+import createAnElement from './methods/createElement.js'
+
+export default function newModjoolElement (elementSettings) {
+  const {
+    options = {},
+    html = '',
+    css = '',
+    loaded = () => {},
+    unloaded = () => {}
+  } = elementSettings
   // return function () {
   class ModjoolElement extends HTMLElement {
-    constructor () {
-      super()
+    constructor (...args) {
+      const forPolyfill = super(...args)
       this.setupOptions()
       if (!this.mj_options.inherit) {
         this.attachShadow({ mode: 'open' })
       }
       this.mj_attr = {}
       this.mj_system_attr = {}
+      this.mj_initialHtml = this.innerHTML
+      this.mj_initial = createAnElement(this.innerHTML)
+      this.startDomObserver()
+      return forPolyfill
     }
 
     connectedCallback () {
+      console.log('conn', this.mj_observer)
       if (options().privateId || this.mj_options.privateId) {
         this.mj_id = Math.random().toString(36).slice(-8)
         this.setAttribute('mj-id', this.mj_id)
@@ -30,6 +42,11 @@ export default function newModjoolElement ({
       this.getBody().appendChild(document.createElement('style'))
       this.updateAll()
       loaded()
+    }
+
+    disconnectedCallback () {
+      unloaded()
+      this.stopDomObserver()
     }
 
     static get observedAttributes () {
@@ -59,23 +76,35 @@ export default function newModjoolElement ({
     }
 
     updateStyle () {
-      if (this.isConnected) {
-        const cssContent = css({ ...this.mj_attr, mj: this.mj_system_attr })
-        /* let hasClasses = false
-        if (cssContent.trim().includes('classes:')) {
-          hasClasses = true
-        }
-        console.log(hasClasses, 'classes?') */
-        this.getBody().querySelector('style').textContent = cssContent
-        this.mj_lastStyle = cssContent
-      }
+      this.stopDomObserver()
+      mjUpdateStyle(this, elementSettings)
+      this.startDomObserver()
     }
 
     updateTemplate () {
-      if (this.isConnected) {
-        this.getBody().innerHTML = html({ ...this.mj_attr })
-        this.getBody().appendChild(document.createElement('style')).textContent = this.mj_lastStyle
+      this.stopDomObserver()
+      mjGetSlots(this)
+      mjUpdateTemplate(this, elementSettings)
+      this.startDomObserver()
+    }
+
+    startDomObserver () {
+      const opt = {
+        childList: true,
+        characterData: true,
+        subtree: true
       }
+      this.mj_observer = new MutationObserver(() => {
+        this.mj_initialHtml = this.innerHTML
+        this.mj_initial = createAnElement(this.innerHTML)
+        this.updateAll()
+        console.log('dom updated')
+      })
+      this.mj_observer.observe(this.getBody(), opt)
+    }
+
+    stopDomObserver () {
+      this.mj_observer.disconnect()
     }
 
     setupOptions () {
@@ -93,6 +122,7 @@ export default function newModjoolElement ({
   }
 
   customElements.define(options().name, ModjoolElement)
+  console.log(new ModjoolElement())
   return new ModjoolElement()
   // }
 }

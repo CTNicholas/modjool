@@ -2,22 +2,31 @@
 
 // <link-to url="inki.uk" tooltip="A place to learn"></link-to>
 Modjool({
-  options: {
-    name: 'link-to',
-    attributes: {
-      CLICKS: null,
-      WIDTH: String,
-      AMOUNT: {
-        type: Array,
-        separator: ',',
-        reactive: false
-      },
-      DISPLAY: Boolean,
-      DOTHING: Function // dothing="x, y => x + y"
-    }
-  },
+  options: () => ({
+    name: 'link-to'
+  }),
 
-  html: ({ DOTHING, DISPLAY, USERNAMES, URL, TOOLTIP, SLOT, mj, eachClick }) => `
+  attributes: () => ({
+    CLICKS: null,
+    WIDTH: String,
+    AMOUNT: {
+      type: Array,
+      separator: ',',
+      reactive: false
+    },
+    DISPLAY: Boolean,
+    DOTHING: Function // dothing="x, y => x + y" --probably don't implement
+  }),
+
+  attributes2: () => ({
+    CLICKS: null, WIDTH: String, AMOUNT: Array
+  }),
+
+  attributes3: () => [
+    'CLICKS', 'WIDTH'
+  ],
+
+  html: ({ DOTHING, DISPLAY, USERNAMES, URL, TOOLTIP, SLOT, mj, eachClick, slot }) => `
     <a ref="link" href="${URL}">${SLOT}</a>
     <span ref="tooltip" id="spanTooltip">${TOOLTIP}</span>
     ${eachClick}
@@ -26,6 +35,8 @@ Modjool({
     ${USERNAMES.for(name => `
       <div style="background-color: coral;">${name}</div>
     `)}  
+
+    ${USERNAMES.for(name => `<div style="background-color: coral;">${name}</div>`)}  
 
     ${DISPLAY === true
       ? `Message displayed if true: ${DISPLAY}` : ''
@@ -39,6 +50,10 @@ Modjool({
     ${USERNAMES.for(name => `
       <div>${DOTHING(name, TOOLTIP)}</div> <!-- return new Function('x', 'y', 'x + y') -->
     `)}  
+
+    ${slot}
+
+    ${slot.name}
 
 
     ${USERNAMES}
