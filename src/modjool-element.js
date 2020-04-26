@@ -55,7 +55,7 @@ export default function newModjoolElement (elementSettings) {
 
     getAttributes () {
       for (let i = 0; i < this.attributes.length; i++) {
-        const prop = this.attributes[i].nodeName.toUpperCase()
+        const prop = this.attributes[i].nodeName.toLowerCase()
         if (!prop.toLowerCase().startsWith('mj-')) {
           const val = this.attributes[i].nodeValue
           this.mj_attr[prop] = val

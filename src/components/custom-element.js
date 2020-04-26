@@ -10,21 +10,22 @@ Modjool({
     console.log('Loaded')
   },
 
-  html: ({ FRUIT, AMOUNT, mj, slot }) => `
+  html: ({ attr, modj, slot }) => `
     ${slot.cool} testing pls ${slot}
+    ${attr.fruit} ${modj.id}
   `,
 
-  css: ({ WIDTH, mj }) => `
+  css: ({ attr, modj }) => `
     :host {
       display: block;
       background:yellow;
     }
 
-    ${mj.select} .go {
+    ${modj.select} .go {
       classes: "bg-grey-100 text-lg";
       margin-top: 6px;
       height: 100px;
-      width: ${WIDTH};
+      width: ${attr.width};
       background: red;
     }
 

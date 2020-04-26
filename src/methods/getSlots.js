@@ -16,6 +16,4 @@ export default function (self) {
     self.mj_slots = slot
     console.log(slot)
   }
-
-  console.log('done slots', self.mj_slots)
 }
