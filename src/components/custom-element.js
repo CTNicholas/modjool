@@ -1,27 +1,38 @@
 /* global Modjool */
-Modjool({
+window.potato = Modjool({
   options: () => ({
     name: 'custom-el',
     inherit: true,
-    attributes: ['WIDTH', 'AMOUNT']
+    attributes: ['WIDTH', 'AMOUNT', 'FRUIT']
   }),
 
-  loaded () {
+  html: ({ attr, self, slot }) => `
+    ${slot.cool} testing pls ${slot}
+    ${attr.fruit}
+    <br>
+    ${JSON.stringify(self)}
+    <div class="go">GO</div>
+  `,
+
+  data: () => ({
+
+  }),
+
+  loaded ({ attr }) {
     console.log('Loaded')
   },
 
-  html: ({ attr, modj, slot }) => `
-    ${slot.cool} testing pls ${slot}
-    ${attr.fruit} ${modj.id}
-  `,
+  unloaded () {
+    console.log('Unloaded')
+  },
 
-  css: ({ attr, modj }) => `
+  css: ({ attr, self }) => `
     :host {
       display: block;
       background:yellow;
     }
 
-    ${modj.select} .go {
+    ${self.select} .go {
       classes: "bg-grey-100 text-lg";
       margin-top: 6px;
       height: 100px;

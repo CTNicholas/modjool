@@ -26,14 +26,16 @@ Modjool({
     'CLICKS', 'WIDTH'
   ],
 
-  html: ({ DOTHING, DISPLAY, USERNAMES, URL, TOOLTIP, SLOT, mj, eachClick, slot }) => `
+  html: ({ DOTHING, DISPLAY, USERNAMES, URL, TOOLTIP, SLOT, mj, eachClick, slot, attr }) => `
     <a ref="link" href="${URL}">${SLOT}</a>
     <span ref="tooltip" id="spanTooltip">${TOOLTIP}</span>
     ${eachClick}
     ${USERNAMES.map(name => `<div style="background-color: coral;">${name}</div>`)}
 
     ${USERNAMES.for(name => `
-      <div style="background-color: coral;">${name}</div>
+      <div>
+        <span style="background-color: coral;">${name}</span>
+      </div>
     `)}  
 
     ${USERNAMES.for(name => `<div style="background-color: coral;">${name}</div>`)}  
@@ -46,6 +48,28 @@ Modjool({
       ? `Message displayed if true: ${DISPLAY}`
       : `Message if false: ${DISPLAY}`
     }
+
+    ${DISPLAY === true
+      ? `
+      <div class="mt-header">
+        <h1 id="a-title-name">${attr.title}</h1>
+        <div class="mt-subtitle">${slot.subtitle}</div>
+        <img class="mt-img" src="${attr.img}" />
+      </div>
+      `
+      : `
+      <div class="mt-header">
+        <h1 id="a-title-name">No title selected</h1>
+        <img class="mt-img mt-empty" src="${attr['default-img']}" />
+      </div>
+      `
+    }
+
+    ${DISPLAY === true ? `
+      <span>Messaged displayed if true ${DISPLAY}</span>
+      ` : `
+      <span>Message displayed if false</span>
+    `}
 
     ${USERNAMES.for(name => `
       <div>${DOTHING(name, TOOLTIP)}</div> <!-- return new Function('x', 'y', 'x + y') -->

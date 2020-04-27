@@ -2,5 +2,6 @@ export default {
   name: 'no-name',
   inherit: true,
   attributes: [],
-  privateId: true
+  privateId: true,
+  reactiveDom: true
 }

@@ -9,6 +9,7 @@ import createAnElement from './methods/createElement.js'
 export default function newModjoolElement (elementSettings) {
   const {
     options = {},
+    data = {},
     html = '',
     css = '',
     loaded = () => {},
@@ -23,7 +24,7 @@ export default function newModjoolElement (elementSettings) {
         this.attachShadow({ mode: 'open' })
       }
       this.mj_attr = {}
-      this.mj_system_attr = {}
+      this.mj_system_attr = { name: this.mj_options.name }
       this.mj_initialHtml = this.innerHTML
       this.mj_initial = createAnElement(this.innerHTML)
       this.startDomObserver()
@@ -32,16 +33,11 @@ export default function newModjoolElement (elementSettings) {
 
     connectedCallback () {
       console.log('conn', this.mj_observer)
-      if (options().privateId || this.mj_options.privateId) {
-        this.mj_id = Math.random().toString(36).slice(-8)
-        this.setAttribute('mj-id', this.mj_id)
-        this.mj_idcss = `[mj-id="${this.mj_id}"]`
-        this.mj_system_attr = { id: this.mj_id, select: this.mj_idcss }
-      }
+      this.setupPrivateId()
       this.getAttributes()
-      this.getBody().appendChild(document.createElement('style'))
+      this.createStyleTag()
       this.updateAll()
-      loaded()
+      loaded({ ...this.getDefaultArgs() })
     }
 
     disconnectedCallback () {
@@ -88,23 +84,53 @@ export default function newModjoolElement (elementSettings) {
       this.startDomObserver()
     }
 
-    startDomObserver () {
-      const opt = {
-        childList: true,
-        characterData: true,
-        subtree: true
+    getDefaultArgs () {
+      return {
+        attr: this.mj_attr,
+        self: this.mj_system_attr,
+        data: {},
+        modj: {},
+        func: {}
       }
-      this.mj_observer = new MutationObserver(() => {
-        this.mj_initialHtml = this.innerHTML
-        this.mj_initial = createAnElement(this.innerHTML)
-        this.updateAll()
-        console.log('dom updated')
-      })
-      this.mj_observer.observe(this.getBody(), opt)
+    }
+
+    startDomObserver () {
+      if (this.mj_options.reactiveDom) {
+        const opt = {
+          childList: true,
+          characterData: true,
+          subtree: true
+        }
+        this.mj_observer = new MutationObserver(() => {
+          this.mj_initialHtml = this.innerHTML
+          this.mj_initial = createAnElement(this.innerHTML)
+          this.updateAll()
+          console.log('dom updated')
+        })
+        this.mj_observer.observe(this.getBody(), opt)
+      }
     }
 
     stopDomObserver () {
-      this.mj_observer.disconnect()
+      if (this.mj_options.reactiveDom) {
+        this.mj_observer.disconnect()
+      }
+    }
+
+    createStyleTag () {
+      const cssTag = document.createElement('style')
+      cssTag.setAttribute('id', `mj-style-${this.mj_id}`)
+      cssTag.textContent = this.mj_lastStyle || ''
+      this.getBody().appendChild(cssTag)
+    }
+
+    setupPrivateId () {
+      if (options().privateId || this.mj_options.privateId) {
+        this.mj_id = Math.random().toString(36).slice(-8)
+        this.setAttribute('mj-id', this.mj_id)
+        this.mj_idcss = `[mj-id="${this.mj_id}"]`
+        this.mj_system_attr = { ...this.mj_system_attr, id: this.mj_id, select: this.mj_idcss }
+      }
     }
 
     setupOptions () {
