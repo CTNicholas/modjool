@@ -10,6 +10,7 @@ export default class Modjool {
   static create (options) {
     options = { ...ModjoolDefaults, ...options }
     const element = ModjoolElement(options)
+    console.log('element: ', element)
 
     const elementName = options.name
     console.log(`${elementName} defined?`, !!customElements.get(elementName))
@@ -18,8 +19,6 @@ export default class Modjool {
   }
 
   static default (defaults) {
-    ModjoolDefaults = { ...ModjoolDefaults, ...defaults }
+    Object.assign(ModjoolDefaults, defaults)
   }
 }
-
-console.log('pls', Modjool)

@@ -1,29 +1,29 @@
 // import Modjool from '../modjool.js'
 
-console.log(Modjool)
+Modjool.default({
+  // inherit: true
+})
 
 const obj = {
   name: 'title-header',
+  inherit: true,
 
   js: () => {
     console.log('Running!')
   },
 
-  html: ({ attr }) => `
-    <h1>${attr.title}</h1>
-    
-    ${attr.subtitle ? `
-    <h3>${attr.subtitle}</h3>
-    ` : ''}
+  html: ({ slot, attr }) => `
+    hello esg slot: ${slot.two || slot}<br>
+    fruit: ${attr.fruit}
   `,
 
-  css: ({ attr }) => `
-    h1 {
-      font-size: ${12 * attr.size}px;
+  css: ({ self }) => `
+     ${self.select} {
+      font-size: 18px;
       font-weight: bold;
     }
     h3 {
-      font-size: ${8 * attr.size}px;
+      font-size: 5px;
       font-style: italic;
     }
   `
@@ -31,4 +31,8 @@ const obj = {
 
 // const test = new Modjool(obj)
 
-Modjool.create(obj)
+window.YES = Modjool.create(obj)
+
+console.log('YES', YES)
+
+// YES.html('hello there')
