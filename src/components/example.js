@@ -1,5 +1,7 @@
 // import Modjool from '../modjool.js'
 
+import Modjool from '../modjool'
+
 Modjool.default({
   // inherit: true
 })
@@ -8,13 +10,16 @@ const obj = {
   name: 'title-header',
   inherit: true,
 
-  js: () => {
-    console.log('Running!')
+  js: ({ data, self, attr }) => {
+    data.word = 'flubbergump ' + attr.fruit
+    console.log(`${self.id} is running!`, data)
+    return data
   },
 
-  html: ({ slot, attr }) => `
+  html: ({ data, slot, attr }) => `
     hello esg slot: ${slot.two || slot}<br>
-    fruit: ${attr.fruit}
+    fruit: ${attr.fruit}<br>
+    a word: ${data.word}
   `,
 
   css: ({ self }) => `
@@ -29,10 +34,18 @@ const obj = {
   `
 }
 
+Modjool.create({
+  name: 'new-el',
+  html: () => 'A new element'
+})
+
 // const test = new Modjool(obj)
 
-window.YES = Modjool.create(obj)
-
-console.log('YES', YES)
+window.YES = []
+// YES.push(Modjool.create(obj))
+console.log('Final:', Modjool.create(obj))
 
 // YES.html('hello there')
+
+console.log(Modjool.get())
+console.log(Modjool.get('title-header'))

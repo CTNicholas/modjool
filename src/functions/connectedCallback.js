@@ -17,7 +17,7 @@ export default function (context, options) {
   function initPrivateId () {
     if (options.id === true) {
       context.setAttribute('mj-id', context.mj.id)
-      context.mj.instance.self.select = `[mj-id="${context.mj.id}"]`
+      context.mj.instance.self.select = `${context.mj.name}[mj-id="${context.mj.id}"]`
     }
   }
 }

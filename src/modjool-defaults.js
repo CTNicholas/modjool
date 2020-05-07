@@ -4,5 +4,8 @@ export default {
   id: true,
   js: () => {},
   html: () => '',
-  css: () => ''
+  css: () => '',
+  enter: () => {},
+  ready: () => {},
+  leave: () => {}
 }

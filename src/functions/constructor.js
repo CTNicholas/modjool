@@ -1,6 +1,7 @@
 export default function (context, options) {
   const instanceId = Math.random().toString(36).slice(-8)
   context.mj = {
+    name: options.name,
     id: instanceId,
     attributes: {},
     body: {},

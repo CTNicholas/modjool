@@ -1,5 +1,5 @@
-/* global customElements */
 import ModjoolDefaults from './modjool-defaults.js'
+import ModjoolState from './modjool-state.js'
 import ModjoolElement from './modjool-element.js'
 
 export default class Modjool {
@@ -10,15 +10,15 @@ export default class Modjool {
   static create (options) {
     options = { ...ModjoolDefaults, ...options }
     const element = ModjoolElement(options)
-    console.log('element: ', element)
-
-    const elementName = options.name
-    console.log(`${elementName} defined?`, !!customElements.get(elementName))
-
-    return element
+    ModjoolState.addClass(element)
+    return ModjoolState.getElements(element.mj.name)
   }
 
   static default (defaults) {
     Object.assign(ModjoolDefaults, defaults)
+  }
+
+  static get (className = false) {
+    return ModjoolState.getElements(className)
   }
 }
