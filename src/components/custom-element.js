@@ -6,15 +6,28 @@ window.potato = Modjool({
     attributes: ['WIDTH', 'AMOUNT', 'FRUIT']
   }),
 
-  html: ({ attr, self, slot }) => `
+  html: ({ attr, self, slot, func, evnt }) => `
     ${slot.cool} testing pls ${slot}
     ${attr.fruit}
     <br>
     ${JSON.stringify(self)}
-    <div class="go">GO</div>
+    <div class="go" onclick="${func.doThing()}">GO NOW</div>${func.doThing.toString()}
   `,
 
   data: () => ({
+
+  }),
+
+  functions: () => ({
+    doThing () {
+      console.log('HELLO I\'M WORKING')
+    },
+    doSecondThing () {
+      console.log('second one')
+    }
+  }),
+
+  events: () => ({
 
   }),
 

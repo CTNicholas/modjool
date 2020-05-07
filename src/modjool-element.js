@@ -1,5 +1,6 @@
 /* global customElements, HTMLElement, MutationObserver */
 import defaultOptions from './modjool-config.js'
+import mjSetupFunctions from './methods/setupFunctions.js'
 import mjGetSlots from './methods/getSlots.js'
 import mjUpdateTemplate from './methods/updateTemplate.js'
 import mjUpdateStyle from './methods/updateStyle.js'
@@ -10,6 +11,7 @@ export default function newModjoolElement (elementSettings) {
   const {
     options = {},
     data = {},
+    functions = {},
     html = '',
     css = '',
     loaded = () => {},
@@ -23,10 +25,8 @@ export default function newModjoolElement (elementSettings) {
       if (!this.mj_options.inherit) {
         this.attachShadow({ mode: 'open' })
       }
-      this.mj_attr = {}
-      this.mj_system_attr = { name: this.mj_options.name }
-      this.mj_initialHtml = this.innerHTML
-      this.mj_initial = createAnElement(this.innerHTML)
+      this.setupInitialVariables()
+      this.setupFunctions()
       this.startDomObserver()
       return forPolyfill
     }
@@ -90,7 +90,7 @@ export default function newModjoolElement (elementSettings) {
         self: this.mj_system_attr,
         data: {},
         modj: {},
-        func: {}
+        func: this.mj_functions
       }
     }
 
@@ -126,10 +126,31 @@ export default function newModjoolElement (elementSettings) {
 
     setupPrivateId () {
       if (options().privateId || this.mj_options.privateId) {
-        this.mj_id = Math.random().toString(36).slice(-8)
         this.setAttribute('mj-id', this.mj_id)
         this.mj_idcss = `[mj-id="${this.mj_id}"]`
-        this.mj_system_attr = { ...this.mj_system_attr, id: this.mj_id, select: this.mj_idcss }
+        this.mj_system_attr = { ...this.mj_system_attr, select: this.mj_idcss }
+      }
+    }
+
+    setupFunctions () {
+      mjSetupFunctions(this, elementSettings)
+    }
+
+    setupInitialVariables () {
+      this.mj_id = Math.random().toString(36).slice(-8)
+      window.modjool = { ...window.modjool }
+      window.modjool[`mj_${this.mj_id}`] = { ...window.modjool[`mj_${this.mj_id}`] }
+      this.mj_attr = {}
+      this.mj_system_attr = { name: this.mj_options.name, id: this.mj_id }
+      this.mj_initialHtml = this.innerHTML
+      this.mj_initial = createAnElement(this.innerHTML)
+    }
+
+    getGlobalObject (asString = false) {
+      if (!asString) {
+        return window.modjool[`mj_${this.mj_id}`]
+      } else {
+        return `window.modjool.mj_${this.mj_id}`
       }
     }
 
