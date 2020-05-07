@@ -1,11 +1,25 @@
 /* global customElements */
-import newModjoolElement from './modjool-element.js'
+import ModjoolDefaults from './modjool-defaults.js'
+import ModjoolElement from './modjool-element.js'
 
-export default function Modjool (elementSettings) {
-  const newElementClass = newModjoolElement(elementSettings) // ()
-  const elName = elementSettings.options().name
-  console.log(`${elName} defined?`, !!customElements.get(elName))
-  return newElementClass
+export default class Modjool {
+  constructor (options) {
+    Modjool.create(options)
+  }
+
+  static create (options) {
+    options = { ...ModjoolDefaults, ...options }
+    const element = ModjoolElement(options)
+
+    const elementName = options.name
+    console.log(`${elementName} defined?`, !!customElements.get(elementName))
+
+    return element
+  }
+
+  static default (defaults) {
+    ModjoolDefaults = { ...ModjoolDefaults, ...defaults }
+  }
 }
 
-window.Modjool = Modjool
+console.log('pls', Modjool)

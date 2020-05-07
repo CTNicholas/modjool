@@ -2,12 +2,15 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    main: './src/modjool.js',
-    CustomElementExample: './src/components/example.js'
+    main: './src/index.js'
+    // CustomElementExample: './src/components/example.js'
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'Modjool.js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'Modjool',
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   },
   devServer: {
     contentBase: './dist'
