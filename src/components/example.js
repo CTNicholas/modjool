@@ -52,11 +52,13 @@ Modjool.getAsync().then(console.log)
 
 Modjool.getAsync('title-header').then(el => console.log('title-header', el))
 
-/* Should work, but Babel error
+;(() => {
+  Modjool.getAsync().then(console.log)
+})()
+
 async function hi () {
-  const p = await Modjool.get()
-  console.log(p)
+  const p = await Modjool.getAsync()
+  console.log('p', p)
 }
 
 hi()
-*/

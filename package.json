@@ -12,7 +12,9 @@
   "author": "CTNicholas",
   "license": "ISC",
   "dependencies": {
-    "normalize": "^0.3.1"
+    "core-js": "^3.6.5",
+    "normalize": "^0.3.1",
+    "regenerator-runtime": "^0.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

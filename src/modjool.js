@@ -1,6 +1,3 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-
 import ModjoolDefaults from './modjool-defaults.js'
 import ModjoolState from './modjool-state.js'
 import ModjoolElement from './modjool-element.js'
