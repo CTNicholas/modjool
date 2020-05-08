@@ -1,6 +1,8 @@
 // import Modjool from '../modjool.js'
 
-import Modjool from '../modjool'
+// import Modjool from '../modjool'
+
+/* global Modjool */
 
 Modjool.default({
   // inherit: true
@@ -41,7 +43,7 @@ Modjool.create({
 })
 
 // const test = new Modjool(obj)
-
+/*
 window.YES = []
 
 // YES.push(Modjool.create(obj))
@@ -62,3 +64,4 @@ async function hi () {
 }
 
 hi()
+*/
