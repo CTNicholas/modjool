@@ -34,6 +34,7 @@ const obj = {
   `
 }
 
+const anElement = Modjool.create(obj)
 Modjool.create({
   name: 'new-el',
   html: () => 'A new element'
@@ -42,10 +43,20 @@ Modjool.create({
 // const test = new Modjool(obj)
 
 window.YES = []
+
 // YES.push(Modjool.create(obj))
-console.log('Final:', Modjool.create(obj))
 
 // YES.html('hello there')
 
-console.log(Modjool.get())
-console.log(Modjool.get('title-header'))
+Modjool.getAsync().then(console.log)
+
+Modjool.getAsync('title-header').then(el => console.log('title-header', el))
+
+/* Should work, but Babel error
+async function hi () {
+  const p = await Modjool.get()
+  console.log(p)
+}
+
+hi()
+*/

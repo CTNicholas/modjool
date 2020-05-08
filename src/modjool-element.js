@@ -8,12 +8,10 @@ import mjUpdate from './functions/update.js'
 import mjLifecycle from './functions/lifecycle.js'
 
 export default function (options) {
-  let createdElement
   class ModjoolElement extends HTMLElement {
     constructor (...args) {
       const polyfill = super(...args)
       mjConstructor(this, options)
-      createdElement = this
       mjLifecycle(this, options, 'enter')
       return polyfill
     }
@@ -21,10 +19,10 @@ export default function (options) {
     connectedCallback () {
       mjConnectedCallback(this, options)
       mjUpdateSlots(this, options)
-      ModjoolState.addElement(createdElement)
       mjLifecycle(this, options, 'ready')
       mjLifecycle(this, options, 'js')
       mjUpdate(this, options)
+      ModjoolState.addElement(this)
     }
 
     disconnectedCallback () {
@@ -44,5 +42,9 @@ export default function (options) {
     }
   }
   customElements.define(options.name, ModjoolElement)
-  return createdElement
+  if (customElements.get(options.name)) {
+    return true
+  } else {
+    return false
+  }
 }

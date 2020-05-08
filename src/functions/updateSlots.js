@@ -1,3 +1,5 @@
+import createElement from './createElement.js'
+
 export default function (context, options) {
   if (context.isConnected) {
     getSlots()
@@ -16,15 +18,5 @@ export default function (context, options) {
       slot = context.mj.bodyContent
     }
     context.mj.instance.slot = slot
-  }
-
-  function createElement (str) {
-    var frag = document.createDocumentFragment()
-    var elem = document.createElement('div')
-    elem.innerHTML = str
-    while (elem.childNodes[0]) {
-      frag.appendChild(elem.childNodes[0])
-    }
-    return frag
   }
 }

@@ -1,3 +1,5 @@
+// import createElement from './createElement.js'
+
 export default function (context, { html, css }) {
   if (context.isConnected) {
     updateBody()
@@ -5,20 +7,23 @@ export default function (context, { html, css }) {
   }
 
   function updateStyle () {
-    let styleTag = context.mj.body.querySelector(context.mj.instance.self.select)
-    if (!styleTag) {
-      styleTag = createStyleTag()
-    }
-    if (css) {
-      styleTag.textContent = css({ ...context.mj.instance })
+    const parsedCss = css({ ...context.mj.instance })
+    if (parsedCss) {
+      let styleTag = context.mj.body.querySelector(context.mj.instance.self.select)
+      if (!styleTag) {
+        styleTag = createStyleTag()
+      }
+      styleTag.textContent = parsedCss
     }
   }
 
   function updateBody () {
-    if (html) {
-      context.mj.body.innerHTML = html({ ...context.mj.instance })
+    const parsedHtml = html({ ...context.mj.instance })
+    if (parsedHtml) {
+      context.mj.body.innerHTML = parsedHtml
     } else {
       context.mj.body.innerHTML = context.mj.bodyContent
+      console.log('no html')
     }
   }
 
