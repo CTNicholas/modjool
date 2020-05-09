@@ -7,6 +7,7 @@ export default function (context, options) {
     body: {},
     bodyContent: '',
     styleContent: '',
+    reactiveAttributes: options.attributes,
     instance: {
       attr: {},
       data: {},

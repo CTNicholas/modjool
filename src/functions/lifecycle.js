@@ -1,3 +1,3 @@
 export default function ({ mj }, options, func) {
-  mj.instance.data = options[func](mj.instance) || mj.instance.data
+  if (options[func] !== undefined) { options[func](this.mj.instance) }
 }

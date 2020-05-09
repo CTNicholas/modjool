@@ -6,31 +6,26 @@ import mjConnectedCallback from './functions/connectedCallback.js'
 import mjUpdateSlots from './functions/updateSlots.js'
 import mjUpdate from './functions/update.js'
 import mjLifecycle from './functions/lifecycle.js'
+import mjGetAttributes from './functions/getAttributes.js'
+
+const KEYWORDS = ['html', 'js', 'css', 'name', 'inherit', 'attributes', 'enter', 'ready', 'leave']
 
 export default function (options) {
   class ModjoolElement extends HTMLElement {
     constructor (...args) {
       const polyfill = super(...args)
       mjConstructor(this, options)
-      console.time(options.name + ' ' + this.mj.id)
       mjLifecycle(this, options, 'enter')
+      console.log('est')
       return polyfill
     }
 
+    // Originally skipped event if (this.innerHTML !== '')
+    // Changed for consistency
     connectedCallback () {
-      // console.dir(this)
-      console.log(this.innerHTML)
-      console.log(this.outerHTML)
-      console.log({ ...this.attributes })
-      if (this.innerHTML !== '') {
+      document.addEventListener('DOMContentLoaded', () => {
         this.runConnectedCallback()
-        console.timeEnd(options.name + ' ' + this.mj.id)
-      } else {
-        document.addEventListener('DOMContentLoaded', () => {
-          this.runConnectedCallback()
-          console.timeEnd(options.name + ' ' + this.mj.id)
-        })
-      }
+      })
     }
 
     runConnectedCallback () {
@@ -44,6 +39,32 @@ export default function (options) {
 
     disconnectedCallback () {
       mjLifecycle(this, options, 'leave')
+    }
+
+    static get observedAttributes () {
+      if (options.attributes !== undefined) {
+        return options.attributes.map(attr => {
+          attr = attr.toLowerCase()
+          if (!KEYWORDS.includes(attr)) {
+            return attr
+          } else {
+            console.error(`ERROR: Modjool keyword used as element attribute name [${attr}]`)
+          }
+        })
+      } else return []
+    }
+
+    attributeChangedCallback (attrName, oldVal, newVal) {
+      if (oldVal !== newVal) {
+        mjGetAttributes(this, options)
+        mjLifecycle(this, options, attrName)
+        mjUpdate(this, options)
+      }
+    }
+
+    update () {
+      mjUpdateSlots(this, options)
+      mjUpdate(this, options)
     }
 
     html (newHtml) {

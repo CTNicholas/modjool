@@ -2,7 +2,7 @@
 // import Modjool from '../modjool'
 
 /* global Modjool */
-
+console.time('START ALL')
 Modjool.default({
   // inherit: true
 })
@@ -10,11 +10,16 @@ Modjool.default({
 const obj = {
   name: 'title-header',
   inherit: true,
+  attributes: ['fruit'],
+
+  fruit: ({ data, attr }) => {
+    console.log('wow was easy')
+    data.word = 'prooty' + attr.fruit
+  },
 
   js: ({ data, self, attr }) => {
     data.word = 'flubbergump ' + attr.fruit
     console.log(`${self.id} is running!`, data)
-    return data
   },
 
   html: ({ data, slot, attr }) => `
