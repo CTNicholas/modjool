@@ -1,5 +1,4 @@
 // import Modjool from '../modjool.js'
-
 // import Modjool from '../modjool'
 
 /* global Modjool */
@@ -19,7 +18,7 @@ const obj = {
   },
 
   html: ({ data, slot, attr }) => `
-    hello esg slot: ${slot.two || slot}<br>
+    hello esg slot: ${slot}<br>
     fruit: ${attr.fruit}<br>
     a word: ${data.word}
   `,
@@ -40,6 +39,12 @@ const anElement = Modjool.create(obj)
 Modjool.create({
   name: 'new-el',
   html: () => 'A new element'
+})
+
+const food = new Modjool({
+  name: 'food-el',
+  inherit: false,
+  html: () => `g`
 })
 
 // const test = new Modjool(obj)
@@ -65,3 +70,7 @@ async function hi () {
 
 hi()
 */
+
+Modjool.getAsync('food-el').then(b => {
+  console.log('After food el', b)
+})

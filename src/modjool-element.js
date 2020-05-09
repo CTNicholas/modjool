@@ -12,11 +12,28 @@ export default function (options) {
     constructor (...args) {
       const polyfill = super(...args)
       mjConstructor(this, options)
+      console.time(options.name + ' ' + this.mj.id)
       mjLifecycle(this, options, 'enter')
       return polyfill
     }
 
     connectedCallback () {
+      // console.dir(this)
+      console.log(this.innerHTML)
+      console.log(this.outerHTML)
+      console.log({ ...this.attributes })
+      if (this.innerHTML !== '') {
+        this.runConnectedCallback()
+        console.timeEnd(options.name + ' ' + this.mj.id)
+      } else {
+        document.addEventListener('DOMContentLoaded', () => {
+          this.runConnectedCallback()
+          console.timeEnd(options.name + ' ' + this.mj.id)
+        })
+      }
+    }
+
+    runConnectedCallback () {
       mjConnectedCallback(this, options)
       mjUpdateSlots(this, options)
       mjLifecycle(this, options, 'ready')

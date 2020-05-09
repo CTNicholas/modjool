@@ -1,7 +1,5 @@
 export default function (context, { html, css }) {
   if (context.isConnected) {
-    console.log('bod:', html({ ...context.mj.instance }))
-
     var tempEl = document.createElement('template')
     const bodyString = html({ ...context.mj.instance }) || context.mj.bodyContent
     tempEl.innerHTML = bodyString
@@ -15,7 +13,6 @@ export default function (context, { html, css }) {
       cssTag.textContent = parsedCss
       bodyFrag.appendChild(cssTag)
     }
-    console.log(bodyFrag)
     while (context.mj.body.firstChild) {
       context.mj.body.removeChild(context.mj.body.firstChild)
     }

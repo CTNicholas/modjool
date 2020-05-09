@@ -13,7 +13,7 @@ export default function (context, options) {
       self: {
         id: instanceId,
         name: options.name,
-        select: ''
+        select: `${options.name}[mj-id="${instanceId}"]`
       },
       slot: {}
     },

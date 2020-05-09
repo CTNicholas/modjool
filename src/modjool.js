@@ -29,7 +29,9 @@ export default class Modjool {
   static getAsync (className) {
     return new Promise((resolve, reject) => {
       document.addEventListener('DOMContentLoaded', () => {
-        resolve(Modjool.get(className))
+        setTimeout(() => {
+          resolve(Modjool.get(className))
+        }, 0)
       })
     })
     // return ModjoolState.elements.filter(el => className ? el.mj.name === className : true)
