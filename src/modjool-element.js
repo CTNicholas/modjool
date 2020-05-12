@@ -8,7 +8,7 @@ import mjUpdate from './functions/update.js'
 import mjLifecycle from './functions/lifecycle.js'
 import mjGetAttributes from './functions/getAttributes.js'
 
-const KEYWORDS = ['html', 'js', 'css', 'name', 'inherit', 'attributes', 'enter', 'ready', 'leave']
+const KEYWORDS = ['html', 'js', 'css', 'tag', 'inherit', 'attributes', 'enter', 'ready', 'leave', 'loaded', 'data']
 
 export default function (options) {
   class ModjoolElement extends HTMLElement {
@@ -16,7 +16,6 @@ export default function (options) {
       const polyfill = super(...args)
       mjConstructor(this, options)
       mjLifecycle(this, options, 'enter')
-      console.log('est')
       return polyfill
     }
 
@@ -31,9 +30,14 @@ export default function (options) {
     runConnectedCallback () {
       mjConnectedCallback(this, options)
       mjUpdateSlots(this, options)
-      mjLifecycle(this, options, 'ready')
-      mjLifecycle(this, options, 'js')
+      this.mj.instance.data = mjLifecycle(this, options, 'data') || {}
+      if (mjLifecycle(this, options, 'ready') === null) {
+        mjLifecycle(this, options, 'js')
+      }
       mjUpdate(this, options)
+      if (!mjLifecycle(this, options, 'loaded') === null) {
+        mjUpdate(this, options)
+      }
       ModjoolState.addElement(this)
     }
 
@@ -79,10 +83,6 @@ export default function (options) {
       mjUpdate(this, options)
     }
   }
-  customElements.define(options.name, ModjoolElement)
-  if (customElements.get(options.name)) {
-    return true
-  } else {
-    return false
-  }
+  customElements.define(options.tag, ModjoolElement)
+  return !!customElements.get(options.tag)
 }

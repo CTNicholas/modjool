@@ -13,8 +13,8 @@ export default function (context, { html, css }) {
       cssTag.textContent = parsedCss
       bodyFrag.appendChild(cssTag)
     }
-    while (context.mj.body.firstChild) {
-      context.mj.body.removeChild(context.mj.body.firstChild)
+    while (context.firstChild) {
+      context.removeChild(context.firstChild)
     }
     context.mj.body.appendChild(bodyFrag)
   }

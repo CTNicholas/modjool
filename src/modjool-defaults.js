@@ -1,11 +1,11 @@
 export default {
-  name: 'no-name',
+  tag: 'no-name',
   inherit: false,
   id: true,
-  js: () => {},
   html: () => '',
   css: () => '',
-  enter: () => {},
-  ready: () => {},
-  leave: () => {}
+  js: undefined,
+  enter: undefined,
+  ready: undefined,
+  leave: undefined
 }
