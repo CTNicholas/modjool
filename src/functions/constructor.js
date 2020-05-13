@@ -1,5 +1,7 @@
+import mjInstanceFunc from './instanceFunc.js'
+
 export default function (context, options) {
-  const instanceId = Math.random().toString(36).slice(-8)
+  const instanceId = Math.random().toString(36).slice(-6)
   const selector = options.inherit
     ? `${options.tag}[mj-id="${instanceId}"]`
     : `:host(${options.tag}[mj-id="${instanceId}"])`
@@ -14,6 +16,7 @@ export default function (context, options) {
     instance: {
       attr: {},
       data: {},
+      func: mjInstanceFunc(context, options),
       self: {
         id: instanceId,
         tag: options.tag,

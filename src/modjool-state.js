@@ -11,6 +11,6 @@ export default {
   },
 
   getElements (testName) {
-    return this.elements.filter(el => testName ? el.mj.name === testName : true)
+    return this.elements.filter(el => testName ? el.mj.tag === testName : true)
   }
 }

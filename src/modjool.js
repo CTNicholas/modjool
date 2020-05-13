@@ -1,7 +1,7 @@
 import ModjoolDefaults from './modjool-defaults.js'
 import ModjoolState from './modjool-state.js'
 import ModjoolElement from './modjool-element.js'
-import ModjoolSimpleElement from './modjool-simple-element.js'
+// import ModjoolSimpleElement from './modjool-simple-element.js'
 
 export default class Modjool {
   constructor (options) {
@@ -9,12 +9,8 @@ export default class Modjool {
   }
 
   static createSingle (options) {
-    if (typeof options === 'string' || options instanceof String) {
-      return ModjoolSimpleElement(options)
-    } else {
-      options = { ...ModjoolDefaults, ...options }
-      return ModjoolElement(options)
-    }
+    const isString = typeof options === 'string' || options instanceof String
+    return ModjoolElement(!isString, options)
   }
 
   static create (options) {
@@ -43,9 +39,8 @@ export default class Modjool {
       document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           resolve(Modjool.get(className))
-        }, 0)
+        }, 100)
       })
     })
-    // return ModjoolState.elements.filter(el => className ? el.mj.name === className : true)
   }
 }

@@ -1,4 +1,5 @@
 /* global customElements, HTMLElement */
+import ModjoolDefaults from './modjool-defaults.js'
 import ModjoolState from './modjool-state.js'
 
 import mjConstructor from './functions/constructor.js'
@@ -10,21 +11,55 @@ import mjGetAttributes from './functions/getAttributes.js'
 
 const KEYWORDS = ['html', 'js', 'css', 'tag', 'inherit', 'attributes', 'enter', 'ready', 'leave', 'loaded', 'data']
 
-export default function (options) {
+export default function (advanced, options) {
+  if (advanced) {
+    options = { ...ModjoolDefaults, ...options }
+  }
   class ModjoolElement extends HTMLElement {
     constructor (...args) {
       const polyfill = super(...args)
-      mjConstructor(this, options)
-      mjLifecycle(this, options, 'enter')
+      if (advanced) {
+        mjConstructor(this, options)
+        mjLifecycle(this, options, 'enter')
+      }
       return polyfill
     }
 
     // Originally skipped event if (this.innerHTML !== '')
     // Changed for consistency
     connectedCallback () {
-      document.addEventListener('DOMContentLoaded', () => {
-        this.runConnectedCallback()
-      })
+      if (advanced) {
+        document.addEventListener('DOMContentLoaded', () => {
+          this.runConnectedCallback()
+        })
+      }
+    }
+
+    disconnectedCallback () {
+      if (advanced) {
+        mjLifecycle(this, options, 'leave')
+      }
+    }
+
+    static get observedAttributes () {
+      if (advanced && options.attributes !== undefined) {
+        return options.attributes.map(attr => {
+          attr = attr.toLowerCase()
+          if (!KEYWORDS.includes(attr)) {
+            return attr
+          } else {
+            console.error(`ERROR: Modjool keyword used as element attribute name [${attr}]`)
+          }
+        })
+      } else if (advanced) { return [] }
+    }
+
+    attributeChangedCallback (attrName, oldVal, newVal) {
+      if (advanced && oldVal !== newVal) {
+        mjGetAttributes(this, options)
+        mjLifecycle(this, options, attrName)
+        mjUpdate(this, options)
+      }
     }
 
     runConnectedCallback () {
@@ -39,31 +74,6 @@ export default function (options) {
         mjUpdate(this, options)
       }
       ModjoolState.addElement(this)
-    }
-
-    disconnectedCallback () {
-      mjLifecycle(this, options, 'leave')
-    }
-
-    static get observedAttributes () {
-      if (options.attributes !== undefined) {
-        return options.attributes.map(attr => {
-          attr = attr.toLowerCase()
-          if (!KEYWORDS.includes(attr)) {
-            return attr
-          } else {
-            console.error(`ERROR: Modjool keyword used as element attribute name [${attr}]`)
-          }
-        })
-      } else return []
-    }
-
-    attributeChangedCallback (attrName, oldVal, newVal) {
-      if (oldVal !== newVal) {
-        mjGetAttributes(this, options)
-        mjLifecycle(this, options, attrName)
-        mjUpdate(this, options)
-      }
     }
 
     update () {
@@ -83,6 +93,11 @@ export default function (options) {
       mjUpdate(this, options)
     }
   }
-  customElements.define(options.tag, ModjoolElement)
-  return !!customElements.get(options.tag)
+  if (advanced) {
+    customElements.define(options.tag, ModjoolElement)
+    return !!customElements.get(options.tag)
+  } else {
+    customElements.define(options, ModjoolElement)
+    return !!customElements.get(options)
+  }
 }
