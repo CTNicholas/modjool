@@ -13,7 +13,8 @@ export default class Modjool {
     return ModjoolElement(!isString, options)
   }
 
-  static create (options) {
+  static create (...options) {
+    options = options.length === 1 ? options[0] : options
     if (Array.isArray(options)) {
       for (const option of options) {
         if (!Modjool.createSingle(option)) {

@@ -29,10 +29,19 @@ export default function (advanced, options) {
     // Changed for consistency
     connectedCallback () {
       if (advanced) {
-        document.addEventListener('DOMContentLoaded', () => {
+        console.log('Loading', options.tag, this.mj.id, this)
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
           this.runConnectedCallback()
-        })
+        } else {
+          document.addEventListener('DOMContentLoaded', () => {
+            this.runConnectedCallback()
+          })
+        }
+      } else {
+        this.mj = {}
+        this.mj.tag = options.tag
       }
+      ModjoolState.addElement(this)
     }
 
     disconnectedCallback () {
@@ -73,7 +82,6 @@ export default function (advanced, options) {
       if (!mjLifecycle(this, options, 'loaded') === null) {
         mjUpdate(this, options)
       }
-      ModjoolState.addElement(this)
     }
 
     update () {

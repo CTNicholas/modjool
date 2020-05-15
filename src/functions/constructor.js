@@ -2,9 +2,13 @@ import mjInstanceFunc from './instanceFunc.js'
 
 export default function (context, options) {
   const instanceId = Math.random().toString(36).slice(-6)
-  const selector = options.inherit
-    ? `${options.tag}[mj-id="${instanceId}"]`
-    : `:host(${options.tag}[mj-id="${instanceId}"])`
+  const selector = function (rule = '') {
+    if (options.inherit) {
+      return `${options.tag}[mj-id="${instanceId}"]${rule}`
+    } else {
+      return `:host(${options.tag}[mj-id="${instanceId}"]${rule})`
+    }
+  }
   context.mj = {
     tag: options.tag,
     id: instanceId,

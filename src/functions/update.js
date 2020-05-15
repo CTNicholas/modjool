@@ -1,4 +1,4 @@
-export default function (context, { html, css }) {
+export default function (context, { html, css, inherit }) {
   if (context.isConnected) {
     var tempEl = document.createElement('template')
     const bodyString = html({ ...context.mj.instance }) || context.mj.bodyContent
@@ -10,12 +10,44 @@ export default function (context, { html, css }) {
     if (parsedCss) {
       const cssTag = document.createElement('style')
       cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
-      cssTag.textContent = parsedCss
+      cssTag.textContent = addSelector(parsedCss)
       bodyFrag.appendChild(cssTag)
     }
     while (context.firstChild) {
       context.removeChild(context.firstChild)
     }
     context.mj.body.appendChild(bodyFrag)
+  }
+
+  function doCommaLoop (match, split) {
+    for (const str in split) {
+      const regex = /:self\(([^\s]*)\)/im
+      const regRes = split[str].match(regex)
+      if (regRes) {
+        split[str] = split[str].replace(regRes[0], context.mj.instance.self.select(regRes[1]))
+      } else if (split[str].includes(':self')) {
+        split[str] = split[str].replace(':self', context.mj.instance.self.select())
+      } else {
+        split[str] = `${context.mj.instance.self.select()} ${split[str]}`
+      }
+    }
+    return split
+  }
+
+  function doSelectorCommas (match, part) {
+    const split = part.trimStart().split(',')
+    match = match.trimStart()
+    let result
+    if (inherit) {
+      result = doCommaLoop(match, split)
+    } else {
+      result = doCommaLoop(match, split)
+    }
+    return result.join(', ') + match.slice(part.length)
+  }
+
+  function addSelector (css) {
+    const selectorRegex = /^(?!.*@media)[\t ]*([a-zA-Z#.:*[][^{/]*\s*){[\s\S]*?}/gm
+    return css.replace(selectorRegex, doSelectorCommas)
   }
 }
