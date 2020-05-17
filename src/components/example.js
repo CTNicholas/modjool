@@ -1,6 +1,6 @@
 /* global Modjool */
 // import Modjool from '../modjool'
-import './assorted.js'
+// import './assorted.js'
 import './nested.js'
 // console.time('START ALL')
 

@@ -31,17 +31,19 @@ export default function (advanced, options) {
       if (advanced) {
         console.log('Loading', options.tag, this.mj.id, this)
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
+          console.log(this.mj.id, 'body ready')
           this.runConnectedCallback()
         } else {
           document.addEventListener('DOMContentLoaded', () => {
+            console.log(this.mj.id, 'waiting for body')
             this.runConnectedCallback()
           })
         }
       } else {
         this.mj = {}
         this.mj.tag = options.tag
+        ModjoolState.addElement(this)
       }
-      ModjoolState.addElement(this)
     }
 
     disconnectedCallback () {
@@ -67,7 +69,9 @@ export default function (advanced, options) {
       if (advanced && oldVal !== newVal) {
         mjGetAttributes(this, options)
         mjLifecycle(this, options, attrName)
-        mjUpdate(this, options)
+        if (this.mj.loaded) {
+          mjUpdate(this, options)
+        }
       }
     }
 
@@ -79,9 +83,11 @@ export default function (advanced, options) {
         mjLifecycle(this, options, 'js')
       }
       mjUpdate(this, options)
+      this.mj.loaded = true
       if (!mjLifecycle(this, options, 'loaded') === null) {
         mjUpdate(this, options)
       }
+      ModjoolState.addElement(this)
     }
 
     update () {

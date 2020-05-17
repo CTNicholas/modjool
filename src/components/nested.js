@@ -4,6 +4,23 @@ Modjool.default({
   inherit: true
 })
 
+Modjool.create({
+  tag: 'mj-butt',
+  attributes: ['link'],
+  html: ({ attr, slot }) => `
+    <a href="${attr.link}">${slot}</a><br><br>
+  `,
+  css: () => `
+    a {
+      color: red;
+      font-weight: bold;
+    }
+  `,
+  js: ({ slot, self }) => {
+    console.log('id:', self.id, 'slot:', slot)
+  }
+})
+
 Modjool.create(['inner-simple', 'outer-simple'])
 
 Modjool.create({

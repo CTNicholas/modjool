@@ -1,5 +1,4 @@
 /* global Modjool */
-console.log('jiiii')
 Modjool.default({
   // inherit: true
 })
@@ -208,7 +207,3 @@ async function hi () {
 
 hi()
 */
-
-
-console.log('joooo')
-
