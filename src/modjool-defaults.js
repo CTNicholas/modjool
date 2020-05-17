@@ -3,6 +3,7 @@ export default {
   inherit: false,
   id: true,
   scopedCss: true,
+  unhide: true,
   html: () => '',
   css: () => '',
   js: undefined,

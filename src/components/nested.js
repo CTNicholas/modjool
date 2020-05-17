@@ -14,6 +14,7 @@ Modjool.create({
     a {
       color: red;
       font-weight: bold;
+      font-size: 30px;
     }
   `,
   js: ({ slot, self }) => {

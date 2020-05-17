@@ -29,13 +29,10 @@ export default function (advanced, options) {
     // Changed for consistency
     connectedCallback () {
       if (advanced) {
-        console.log('Loading', options.tag, this.mj.id, this)
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
-          console.log(this.mj.id, 'body ready')
           this.runConnectedCallback()
         } else {
           document.addEventListener('DOMContentLoaded', () => {
-            console.log(this.mj.id, 'waiting for body')
             this.runConnectedCallback()
           })
         }
@@ -66,12 +63,10 @@ export default function (advanced, options) {
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (advanced && oldVal !== newVal) {
+      if (advanced && this.mj.loaded && oldVal !== newVal) {
         mjGetAttributes(this, options)
         mjLifecycle(this, options, attrName)
-        if (this.mj.loaded) {
-          mjUpdate(this, options)
-        }
+        mjUpdate(this, options)
       }
     }
 
@@ -83,6 +78,9 @@ export default function (advanced, options) {
         mjLifecycle(this, options, 'js')
       }
       mjUpdate(this, options)
+      if (options.unhide) {
+        this.removeAttribute('hidden')
+      }
       this.mj.loaded = true
       if (!mjLifecycle(this, options, 'loaded') === null) {
         mjUpdate(this, options)
