@@ -1,4 +1,4 @@
-export default function (context, { html, css, inherit }) {
+export default function (context, { html, css, inherit, scopedCss }) {
   if (context.isConnected) {
     var tempEl = document.createElement('template')
     const bodyString = html({ ...context.mj.instance }) || context.mj.bodyContent
@@ -10,7 +10,7 @@ export default function (context, { html, css, inherit }) {
     if (parsedCss) {
       const cssTag = document.createElement('style')
       cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
-      cssTag.textContent = addSelector(parsedCss)
+      cssTag.textContent = scopedCss ? addSelector(parsedCss) : parsedCss
       bodyFrag.appendChild(cssTag)
     }
     while (context.firstChild) {
