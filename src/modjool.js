@@ -37,11 +37,17 @@ export default class Modjool {
 
   static getAsync (className) {
     return new Promise((resolve, reject) => {
-      document.addEventListener('DOMContentLoaded', () => {
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
         setTimeout(() => {
           resolve(Modjool.get(className))
-        }, 100)
-      })
+        }, 0)
+      } else {
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+            resolve(Modjool.get(className))
+          }, 10)
+        })
+      }
     })
   }
 }

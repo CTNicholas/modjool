@@ -19,6 +19,18 @@ export default function (context, { html, css, inherit, scopedCss }) {
     context.mj.body.appendChild(bodyFrag)
   }
 
+  function addSelector (css) {
+    const selectorRegex = /^(?!.*@media)[\t ]*([a-zA-Z#.:*[][^{/]*\s*){[\s\S]*?}/gm
+    return css.replace(selectorRegex, doSelectorCommas)
+  }
+
+  function doSelectorCommas (match, part) {
+    const split = part.trimStart().split(',')
+    match = match.trimStart()
+    const result = doCommaLoop(match, split)
+    return result.join(', ') + match.slice(part.length)
+  }
+
   function doCommaLoop (match, split) {
     for (const str in split) {
       const regex = /:self\(([^\s]*)\)/im
@@ -32,22 +44,5 @@ export default function (context, { html, css, inherit, scopedCss }) {
       }
     }
     return split
-  }
-
-  function doSelectorCommas (match, part) {
-    const split = part.trimStart().split(',')
-    match = match.trimStart()
-    let result
-    if (inherit) {
-      result = doCommaLoop(match, split)
-    } else {
-      result = doCommaLoop(match, split)
-    }
-    return result.join(', ') + match.slice(part.length)
-  }
-
-  function addSelector (css) {
-    const selectorRegex = /^(?!.*@media)[\t ]*([a-zA-Z#.:*[][^{/]*\s*){[\s\S]*?}/gm
-    return css.replace(selectorRegex, doSelectorCommas)
   }
 }
