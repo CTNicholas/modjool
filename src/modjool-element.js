@@ -15,6 +15,11 @@ export default function (advanced, options) {
   if (advanced) {
     options = { ...ModjoolDefaults, ...options }
   }
+  // return ModjoolElementCreator(advanced, options)
+  return whenPageReady(() => ModjoolElementCreator(advanced, options))
+}
+
+function ModjoolElementCreator (advanced, options) {
   class ModjoolElement extends HTMLElement {
     constructor (...args) {
       const polyfill = super(...args)
@@ -28,14 +33,9 @@ export default function (advanced, options) {
     // Originally skipped event if (this.innerHTML !== '')
     // Changed for consistency
     connectedCallback () {
-      if (advanced) {
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-          this.runConnectedCallback()
-        } else {
-          document.addEventListener('DOMContentLoaded', () => {
-            this.runConnectedCallback()
-          })
-        }
+      if (advanced && !this.mj.alreadyConnected) {
+        this.mj.alreadyConnected = true
+        this.runConnectedCallback()
       } else {
         this.mj = {}
         this.mj.tag = options.tag
@@ -67,6 +67,9 @@ export default function (advanced, options) {
         mjGetAttributes(this, options)
         mjLifecycle(this, options, attrName)
         mjUpdate(this, options)
+        if (!mjLifecycle(this, options, 'js') === null) {
+          mjUpdate(this, options)
+        }
       }
     }
 
@@ -74,15 +77,13 @@ export default function (advanced, options) {
       mjConnectedCallback(this, options)
       mjUpdateSlots(this, options)
       this.mj.instance.data = mjLifecycle(this, options, 'data') || {}
-      if (mjLifecycle(this, options, 'ready') === null) {
-        mjLifecycle(this, options, 'js')
-      }
+      mjLifecycle(this, options, 'ready')
       mjUpdate(this, options)
       if (options.unhide) {
         this.removeAttribute('hidden')
       }
       this.mj.loaded = true
-      if (!mjLifecycle(this, options, 'loaded') === null) {
+      if (!mjLifecycle(this, options, 'js') === null) {
         mjUpdate(this, options)
       }
       ModjoolState.addElement(this)
@@ -111,5 +112,15 @@ export default function (advanced, options) {
   } else {
     customElements.define(options, ModjoolElement)
     return !!customElements.get(options)
+  }
+}
+
+function whenPageReady (func) {
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    func()
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      func()
+    })
   }
 }

@@ -17,6 +17,9 @@ export default function (context, options) {
     } else {
       slot = context.mj.bodyContent
     }
+    if (context.slotConnected) {
+    }
+    context.slotConnected = true
     context.mj.instance.slot = slot
   }
 }
