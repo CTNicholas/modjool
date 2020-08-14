@@ -1,4 +1,5 @@
 import mjInstanceFunc from './instanceFunc.js'
+import mjUpdate from './update.js'
 
 export default function (context, options) {
   const instanceId = Math.random().toString(36).slice(-6)
@@ -26,7 +27,8 @@ export default function (context, options) {
         id: instanceId,
         tag: options.tag,
         select: selector,
-        element: {}
+        element: {},
+        update: () => mjUpdate(context, options)
       },
       slot: {}
     },

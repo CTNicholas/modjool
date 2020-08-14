@@ -65,9 +65,9 @@ function ModjoolElementCreator (advanced, options) {
     attributeChangedCallback (attrName, oldVal, newVal) {
       if (advanced && this.mj.loaded && oldVal !== newVal) {
         mjGetAttributes(this, options)
-        mjLifecycle(this, options, attrName)
+        mjLifecycle(this, options, attrName, { oldVal, newVal })
         mjUpdate(this, options)
-        if (!mjLifecycle(this, options, 'js') === null) {
+        if (mjLifecycle(this, options, 'js') !== null) {
           mjUpdate(this, options)
         }
       }
@@ -83,7 +83,7 @@ function ModjoolElementCreator (advanced, options) {
         this.removeAttribute('hidden')
       }
       this.mj.loaded = true
-      if (!mjLifecycle(this, options, 'js') === null) {
+      if (mjLifecycle(this, options, 'js') !== null) {
         mjUpdate(this, options)
       }
       ModjoolState.addElement(this)
