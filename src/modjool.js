@@ -17,9 +17,7 @@ export default class Modjool {
     options = options.length === 1 ? options[0] : options
     if (Array.isArray(options)) {
       for (const option of options) {
-        if (!Modjool.createSingle(option)) {
-          return false
-        }
+        Modjool.createSingle(option)
       }
       return options
     } else {

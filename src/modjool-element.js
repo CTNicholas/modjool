@@ -9,7 +9,7 @@ import mjUpdate from './functions/update.js'
 import mjLifecycle from './functions/lifecycle.js'
 import mjGetAttributes from './functions/getAttributes.js'
 
-const KEYWORDS = ['html', 'js', 'css', 'tag', 'inherit', 'attributes', 'enter', 'ready', 'leave', 'loaded', 'data']
+const KEYWORDS = ['html', 'js', 'css', 'tag', 'inherit', 'attributes', 'enter', 'ready', 'leave', 'data']
 
 export default function (advanced, options) {
   if (advanced) {
