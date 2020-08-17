@@ -47,6 +47,7 @@ function ModjoolElementCreator (advanced, options) {
       if (advanced) {
         mjLifecycle(this, options, 'leave')
       }
+      ModjoolState.removeElement(this)
     }
 
     static get observedAttributes () {
