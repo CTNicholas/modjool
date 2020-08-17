@@ -1,5 +1,7 @@
 // import 'core-js/stable'
 // import 'regenerator-runtime/runtime'
 
-import Modjool from './modjool.js'
-export default Modjool
+import modjool from './modjool.js'
+import modjoolLite from './modjoolLite.js'
+
+export { modjool, modjoolLite }

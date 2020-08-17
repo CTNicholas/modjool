@@ -1,51 +1,34 @@
-import ModjoolDefaults from './modjool-defaults.js'
-import ModjoolState from './modjool-state.js'
-import ModjoolElement from './modjool-element.js'
-// import ModjoolSimpleElement from './modjool-simple-element.js'
+import config from './config.js'
+import state from './state.js'
+import createElement from './create.js'
+import ModjoolElement from './element.js'
 
-export default class Modjool {
-  constructor (options) {
-    Modjool.create(options)
-  }
+export default { create, options, get, getAsync }
 
-  static createSingle (options) {
-    const isString = typeof options === 'string' || options instanceof String
-    return ModjoolElement(!isString, options)
-  }
+function create (...options) {
+  return createElement(ModjoolElement, options)    
+}
 
-  static create (...options) {
-    options = options.length === 1 ? options[0] : options
-    if (Array.isArray(options)) {
-      for (const option of options) {
-        Modjool.createSingle(option)
-      }
-      return options
+function options (defaults) {
+  Object.assign(config, defaults)
+}
+
+function get (className = false) {
+  return state.getElements(className)
+}
+
+function getAsync (className) {
+  return new Promise((resolve, reject) => {
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      setTimeout(() => {
+        resolve(get(className))
+      }, 0)
     } else {
-      return Modjool.createSingle(options) ? options.tag : false
-    }
-  }
-
-  static default (defaults) {
-    Object.assign(ModjoolDefaults, defaults)
-  }
-
-  static get (className = false) {
-    return ModjoolState.getElements(className)
-  }
-
-  static getAsync (className) {
-    return new Promise((resolve, reject) => {
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
-          resolve(Modjool.get(className))
-        }, 0)
-      } else {
-        document.addEventListener('DOMContentLoaded', () => {
-          setTimeout(() => {
-            resolve(Modjool.get(className))
-          }, 10)
-        })
-      }
-    })
-  }
+          resolve(get(className))
+        }, 10)
+      })
+    }
+  })
 }

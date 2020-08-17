@@ -1,7 +1,7 @@
-import mjInstanceFunc from './instanceFunc.js'
-import mjUpdate from './update.js'
+import { updateBody } from './update.js'
+import FUNCTIONS from './functions.js'
 
-export default function (context, options) {
+function advanced (context, options) {
   const instanceId = Math.random().toString(36).slice(-6)
   const selector = function (rule = '') {
     if (options.inherit) {
@@ -22,13 +22,13 @@ export default function (context, options) {
     instance: {
       attr: {},
       data: {},
-      func: mjInstanceFunc(context, options),
+      func: FUNCTIONS(context, options),
       self: {
         id: instanceId,
         tag: options.tag,
         select: selector,
         element: {},
-        update: () => mjUpdate(context, options)
+        update: () => updateBody(context, options)
       },
       slot: {}
     },
@@ -42,3 +42,7 @@ export default function (context, options) {
   }
   context.mj.instance.self.element = context.mj.body
 }
+
+function simple () {}
+
+export default { advanced, simple }

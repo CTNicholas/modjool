@@ -1,4 +1,31 @@
-export default function (context, { html, css, inherit, scopedCss }) {
+export { updateBody, updateSlots }
+
+function updateSlots (context, options) {
+  if (context.isConnected) {
+    getSlots()
+  }
+
+  function getSlots () {
+    let slot = ''
+    const bodyFrag = createElement(context.mj.bodyContent)
+    const slotList = bodyFrag.querySelectorAll('slot[name]')
+    if (slotList.length > 0) {
+      slot = {}
+      for (const s of slotList) {
+        slot[s.getAttribute('name')] = s.innerHTML
+      }
+    } else {
+      slot = context.mj.bodyContent
+    }
+    if (context.slotConnected) {
+    }
+    context.slotConnected = true
+    context.mj.instance.slot = slot
+  }
+}
+
+
+function updateBody (context, { html, css, inherit, scopedCss }) {
   if (context.isConnected) {
     var tempEl = document.createElement('template')
     const bodyString = html({ ...context.mj.instance }) || context.mj.bodyContent
@@ -45,4 +72,14 @@ export default function (context, { html, css, inherit, scopedCss }) {
     }
     return split
   }
+}
+
+function createElement (str) {
+  var frag = document.createDocumentFragment()
+  var elem = document.createElement('div')
+  elem.innerHTML = str
+  while (elem.childNodes[0]) {
+    frag.appendChild(elem.childNodes[0])
+  }
+  return frag
 }

@@ -5,7 +5,7 @@
   "private": true,
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watch",
     "serve-old": "(cd ./src && browser-sync start --server --watch --files ./)",
     "start": "webpack-dev-server --open --watch",
     "build": "webpack"
@@ -14,12 +14,14 @@
   "license": "ISC",
   "dependencies": {
     "core-js": "^3.6.5",
+    "jest": "^26.4.0",
     "normalize": "^0.3.1",
     "regenerator-runtime": "^0.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.11.0",
+    "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.2",
     "html-loader": "^1.1.0",
