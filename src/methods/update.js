@@ -2,10 +2,6 @@ export { updateBody, updateSlots }
 
 function updateSlots (context, options) {
   if (context.isConnected) {
-    getSlots()
-  }
-
-  function getSlots () {
     let slot = ''
     const bodyFrag = createElement(context.mj.bodyContent)
     const slotList = bodyFrag.querySelectorAll('slot[name]')

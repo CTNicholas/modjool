@@ -3,12 +3,14 @@
   "version": "0.2.0",
   "description": "Easy web components",
   "private": true,
-  "main": "src/index.js",
+  "source": "src/index.js",
+  "main": "dist/modjool.js",
+  "module": "dist/modjool.module.js",
+  "unpkg": "dist/modjool.umd.js",
   "scripts": {
-    "test": "jest --watch",
-    "serve-old": "(cd ./src && browser-sync start --server --watch --files ./)",
-    "start": "webpack-dev-server --open --watch",
-    "build": "webpack"
+    "build": "microbundle",
+    "dev": "microbundle watch",
+    "test": "jest --watch"
   },
   "author": "CTNicholas",
   "license": "ISC",
@@ -25,6 +27,7 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.2",
     "html-loader": "^1.1.0",
+    "microbundle": "^0.12.3",
     "style-loader": "^1.1.4",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",

@@ -71,10 +71,10 @@ function elementCreator (advanced, options) {
 
 function whenPageReady (func) {
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    func()
+    return func()
   } else {
     document.addEventListener('DOMContentLoaded', () => {
-      func()
+      return func()
     })
   }
 }
