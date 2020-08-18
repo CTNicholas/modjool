@@ -1,4 +1,4 @@
-import { updateBody } from './update.js'
+import { updateBody, updateSlots, updateAll, updateHtml } from './update.js'
 import FUNCTIONS from './functions.js'
 
 function advanced (context, options) {
@@ -28,7 +28,10 @@ function advanced (context, options) {
         tag: options.tag,
         select: selector,
         element: {},
-        update: () => updateBody(context, options)
+        update: () => updateBody(context, options),
+        updateSlots: () => updateSlots(context, options),
+        updateAll: () => updateAll(context, options),
+        html: html => updateHtml(context, options, { html })
       },
       slot: {}
     },

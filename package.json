@@ -24,13 +24,6 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.11.0",
     "babel-jest": "^26.3.0",
-    "babel-loader": "^8.1.0",
-    "css-loader": "^3.5.2",
-    "html-loader": "^1.1.0",
-    "microbundle": "^0.12.3",
-    "style-loader": "^1.1.4",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "microbundle": "^0.12.3"
   }
 }

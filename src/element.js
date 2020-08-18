@@ -35,11 +35,11 @@ function elementCreator (advanced, options) {
     }
     
     static get observedAttributes () {
-      OBSERVE[elementType](this, options)
+      return OBSERVE[elementType](this, options)
     }
     
     attributeChangedCallback (attrName, oldVal, newVal) {
-      CHANGED[elementType](this, options)
+      CHANGED[elementType](this, options, { attrName, oldVal, newVal })
     }
 
     update () {
