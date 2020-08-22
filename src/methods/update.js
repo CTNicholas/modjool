@@ -1,12 +1,28 @@
 function updateAll (...args) {
+  updateAttributes(...args)
   updateSlots(...args)
   updateBody(...args)
 }
 
-function updateHtml (context, options, { html }) {
-  context.mj.body.innerHTML = html
-  console.log(context.mj.body.innerHTML)
-  updateBody(context, options)
+function updateNew (context, options, vals) {
+  for (const [key, val] of Object.entries(vals)) {
+    context.mj.new[key] = val
+    updateBody(context, options)
+  }
+}
+
+function updateAttributes (context, options) {
+  for (let i = 0; i < context.attributes.length; i++) {
+    const prop = context.attributes[i].nodeName.toLowerCase()
+    if (!prop.toLowerCase().startsWith('mj-')) {
+      let val = context.attributes[i].nodeValue
+      if (val === '') {
+        val = true
+      }
+      context.mj.attributes[prop] = val
+    }
+  }
+  context.mj.instance.attr = context.mj.attributes
 }
 
 function updateSlots (context, options) {
@@ -20,12 +36,12 @@ function updateSlots (context, options) {
 function updateBody (context, { html, css, inherit, scopedCss }) {
   if (context.isConnected) {
     var tempEl = document.createElement('template')
-    const bodyString = html({ ...context.mj.instance }) || context.mj.bodyContent
+    const bodyString = context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
     tempEl.innerHTML = bodyString
     const bodyFrag = document.createDocumentFragment()
     bodyFrag.appendChild(tempEl.content)
 
-    const parsedCss = css({ ...context.mj.instance })
+    const parsedCss = context.mj.new.css || css({ ...context.mj.instance })
     if (parsedCss) {
       const cssTag = document.createElement('style')
       cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
@@ -39,7 +55,7 @@ function updateBody (context, { html, css, inherit, scopedCss }) {
   }
 }
 
-export { updateBody, updateSlots, updateHtml, updateAll }
+export { updateBody, updateSlots, updateAttributes, updateNew, updateAll }
 
 function getSlotContent (context) {
   let slot
@@ -67,7 +83,7 @@ function createElement (str) {
 }
 
 function addSelector (selfSelect, css) {
-  const selectorRegex = /^(?!.*@media)[\t ]*([a-zA-Z#.:*[][^{/]*\s*){[\s\S]*?}/gm
+  const selectorRegex = /(?!.*@media)[\t ]*([a-zA-Z#.:*[][^{/]*\s*){[\s\S]*?}/gm
   return css.replace(selectorRegex, (match, part) => {
     const split = part.trimStart().split(',')
     match = match.trimStart()

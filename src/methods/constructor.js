@@ -1,4 +1,5 @@
-import { updateBody, updateSlots, updateAll, updateHtml } from './update.js'
+import { updateBody, updateSlots, updateAll, updateNew } from './update.js'
+import { runLifecycle } from './utils.js'
 import FUNCTIONS from './functions.js'
 
 function advanced (context, options) {
@@ -29,11 +30,28 @@ function advanced (context, options) {
         select: selector,
         element: {},
         update: () => updateBody(context, options),
-        updateSlots: () => updateSlots(context, options),
+        updateSlot: () => updateSlots(context, options),
+        updateAttr: () => updateAttributes(context, options),
         updateAll: () => updateAll(context, options),
-        html: html => updateHtml(context, options, { html })
+        remove: () => context.mj.body.host ? context.mj.body.host.remove() : context.mj.body.remove(),
+        css: css => updateNew(context, options, { css }),
+        data: data => updateNew(context, options, { data }),
+        enter: enter => updateNew(context, options, { enter }),
+        html: html => updateNew(context, options, { html }),
+        js: js => updateNew(context, options, { js }),
+        leave: leave => updateNew(context, options, { leave }),
+        ready: ready => updateNew(context, options, { ready }),
       },
-      slot: {}
+      slot: {},
+    },
+    new: {
+      css: null,
+      data: null,
+      enter: null,
+      html: null,
+      js: null,
+      leave: null,
+      ready: null,
     },
     options: options
   }
@@ -43,7 +61,8 @@ function advanced (context, options) {
   } else {
     context.mj.body = context
   }
-  context.mj.instance.self.element = context.mj.body
+  context.mj.instance.self.element = context.mj.body.host ? context.mj.body.host : context.mj.body
+  runLifecycle(context, options, 'enter')
 }
 
 function simple () {}

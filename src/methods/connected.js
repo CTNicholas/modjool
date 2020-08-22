@@ -1,6 +1,6 @@
 import state from '../state.js'
-import { getAttributes, runLifecycle } from './utils.js'
-import { updateBody, updateSlots } from './update.js'
+import { runLifecycle } from './utils.js'
+import { updateBody, updateSlots, updateAttributes } from './update.js'
 
 function advanced (context, options) {
   const args = [context, options]
@@ -9,10 +9,10 @@ function advanced (context, options) {
     
     context.mj.bodyContent = context.innerHTML
     initPrivateId(...args)
-    getAttributes(...args)
+    updateAttributes(...args)
     updateSlots(...args)
 
-    context.mj.instance.data = runLifecycle(context, options, 'data') || {}
+    context.mj.instance.data = context.mj.new.data || runLifecycle(context, options, 'data') || {}
     runLifecycle(context, options, 'ready')
     updateBody(...args)
 
