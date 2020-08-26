@@ -1,5 +1,6 @@
 /* global customElements, HTMLElement */
 import config from './config.js'
+import whenReady from './whenready.js'
 import { updateBody, updateSlots } from './methods/update.js'
 
 import CONSTRUCTOR from './methods/constructor.js'
@@ -13,7 +14,7 @@ export default function (advanced, options) {
     options = { ...config, ...options }
   }
   // return elementCreator(advanced, options)
-  return whenPageReady(() => elementCreator(advanced, options))
+  return whenReady(() => elementCreator(advanced, options))
 }
 
 function elementCreator (advanced, options) {
@@ -66,15 +67,5 @@ function elementCreator (advanced, options) {
   } else {
     customElements.define(options, ModjoolElement)
     return !!customElements.get(options)
-  }
-}
-
-function whenPageReady (func) {
-  if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    return func()
-  } else {
-    document.addEventListener('DOMContentLoaded', () => {
-      return func()
-    })
   }
 }
