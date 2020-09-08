@@ -10,7 +10,6 @@ function create (...options) {
 
 function options (defaults) {
   state.config = { ...state.config,  ...defaults }
-  console.log(state.config, state)
 }
 
 function get (className = false) {

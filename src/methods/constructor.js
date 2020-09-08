@@ -53,6 +53,9 @@ function advanced (context, options) {
       leave: null,
       ready: null,
     },
+    events: {
+      elementReady: new Event('mj-element-ready')
+    },
     options: options
   }
   if (options.inherit === false) {

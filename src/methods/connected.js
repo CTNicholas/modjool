@@ -6,26 +6,27 @@ function advanced (context, options) {
   const args = [context, options]
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
-    
-    context.mj.bodyContent = context.innerHTML
-    initPrivateId(...args)
-    updateAttributes(...args)
-    updateSlots(...args)
 
-    context.mj.instance.data = context.mj.new.data || runLifecycle(context, options, 'data') || {}
-    runLifecycle(context, options, 'ready')
-    updateBody(...args)
+    waitForParentElements(context, () => connectToDom())
 
-    unhideElement(...args)
-    context.mj.loaded = true
-
-    if (runLifecycle(context, options, 'js') !== null) {
-      updateBody(context, options)
+    function connectToDom () {
+      context.mj.bodyContent = context.innerHTML
+      initPrivateId(...args)
+      updateAttributes(...args)
+      updateSlots(...args)
+      
+      context.mj.instance.data = context.mj.new.data || runLifecycle(context, options, 'data') || {}
+      runLifecycle(context, options, 'ready')
+      updateBody(...args)
+      
+      unhideElement(...args)
+      context.mj.loaded = true
+      
+      if (runLifecycle(context, options, 'js') !== null) {
+        updateBody(context, options)
+      }
+      state.addElement(context)
     }
-    state.addElement(context)
-  } else {
-    // Not sure if mistake...
-    simple(...args)
   }
 }
 
@@ -36,6 +37,20 @@ function simple (context, options) {
 }
 
 export default { advanced, simple }
+
+function waitForParentElements (context, func) {
+  try {
+    if (context.closest(':not(:defined)') === null) {
+      func()
+    }
+  } catch (err) {
+    if (!state.warnings.includes(':defined')) {
+      state.warnings.push(':defined')
+      console.warn('[Modjool] Browser does not support :defined CSS selector, possible custom element nesting bugs')
+    }
+    func()
+  }
+}
 
 function initPrivateId (context, options) {
   if (options.id === true) {

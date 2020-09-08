@@ -1,6 +1,6 @@
 export default {
   tag: 'no-name',
-  inherit: false,
+  inherit: true,
   id: true,
   scopedCss: true,
   unhide: true,
