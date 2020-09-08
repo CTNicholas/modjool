@@ -1,5 +1,5 @@
 /* global customElements, HTMLElement */
-import config from './config.js'
+import state from './state.js'
 import whenReady from './whenready.js'
 import { updateBody, updateSlots } from './methods/update.js'
 
@@ -11,7 +11,7 @@ import CHANGED from './methods/changed.js'
 
 export default function (advanced, options) {
   if (advanced) {
-    options = { ...config, ...options }
+    options = { ...state.config, ...options }
   }
   // return elementCreator(advanced, options)
   return whenReady(() => elementCreator(advanced, options))

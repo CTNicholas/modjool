@@ -1,4 +1,3 @@
-import config from './config.js'
 import state from './state.js'
 import createElement from './create.js'
 import ModjoolElement from './element.js'
@@ -10,7 +9,8 @@ function create (...options) {
 }
 
 function options (defaults) {
-  Object.assign(config, defaults)
+  state.config = { ...state.config,  ...defaults }
+  console.log(state.config, state)
 }
 
 function get (className = false) {

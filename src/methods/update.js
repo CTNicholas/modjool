@@ -12,6 +12,7 @@ function updateNew (context, options, vals) {
 }
 
 function updateAttributes (context, options) {
+  context.mj.attributes = {}
   for (let i = 0; i < context.attributes.length; i++) {
     const prop = context.attributes[i].nodeName.toLowerCase()
     if (!prop.toLowerCase().startsWith('mj-')) {

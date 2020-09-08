@@ -1,4 +1,8 @@
+import config from './config.js'
+
 export default {
+  config: config,
+
   classes: [],
   elements: [],
 
