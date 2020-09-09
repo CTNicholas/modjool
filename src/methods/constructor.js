@@ -62,6 +62,7 @@ function advanced (context, options) {
     context.mj.body = context
   }
   context.mj.instance.self.element = context.mj.body.host ? context.mj.body.host : context.mj.body
+  context.mj.constructorRun = true
   runLifecycle(context, options, 'enter')
 }
 

@@ -36,7 +36,14 @@ newElement({
   js: ({ data, self }) => { 
     data.result = self.id && self.tag && self.select()
   },
-  html: ({ data, self }) => `<div>${data.result ? '✅ self.tag, self.id, self.select works' : '❌ self.tag, self.id, self.select error'} <small>tag: ${self.tag}, id: ${self.id}, select: ${self.select()}</small></div>`
+  html: ({ data, self }) => `<div>${data.result ? '✅ self.tag, self.id, self.select works' : '❌ self.tag, self.id, self.select error'}`
+})
+
+newElement({
+  js: ({ data, self }) => { 
+    data.result = self.id && self.tag && self.select()
+  },
+  html: ({ data, self }) => `<div>${data.result ? '✅' : '❌'} <small>tag: ${self.tag}, id: ${self.id}, select: ${self.select()}</small></div>`
 })
 
 /* === Lifecycle tests ==================================================== */
@@ -109,6 +116,19 @@ newElement({
   result: '❌ reactive attr error'
 }})
 
+newElement({
+  attr: ['result'],
+  ready: ({ attr, data, self }) => {
+    data.error = attr.result
+    attr.result = '✅ change attr proxy works'
+    data.result = self.element.getAttribute('result')
+  },
+  html: ({ attr, data }) => `${data.result.length ? data.result : data.error}`
+}, '', { attr: {
+  result: '❌ change attr proxy error'
+}})
+
+
 /* === Slots ==================================================== */
 newElement({
   html: ({ slot }) => `${slot || '❌ single slot error'}`
@@ -118,7 +138,54 @@ newElement({
   html: ({ slot }) => `
     ${slot.icon && slot.text ? slot.icon + slot.text : '❌ multiple slots error'}
   `
-}, '<span slot="icon">✅ </span><span slot="text">multiple slots work<?span>')
+}, '<span slot="icon">✅ </span><span slot="text">multiple slots work</span>')
+
+
+/* === Nesting ==================================================== */
+modjool.create({
+  tag: 'nest-test-1',
+  html: () => `✅ init before nesting works`
+})
+newElement({
+  html: ({ slot }) => `<nest-test-1></nest-test-1>`
+}, '❌ init before nesting error')
+
+
+newElement({
+  html: ({ slot }) => `<nest-test-2></nest-test-2>`
+}, '❌ init after nesting error')
+modjool.create({
+  tag: 'nest-test-2',
+  html: () => `✅ init after nesting works`
+})
+
+modjool.create({
+  tag: 'nest-test-3',
+  html: () => `❌ alternate nesting before error`
+})
+newElement({
+  html: ({ slot }) => `✅ alternate nesting before works`
+}, '<nest-test-3></nest-test-3>')
+
+newElement({
+  html: ({ slot }) => `✅ alternate nesting after works`
+}, '<nest-test-4></nest-test-4>')
+modjool.create({
+  tag: 'nest-test-4',
+  html: () => `❌ alternate nesting after error`
+})
+
+newElement({
+  html: ({ slot }) => `<nest-test-5-1></nest-test-5-1>`
+}, '❌ double nesting error')
+modjool.create({
+  tag: 'nest-test-5-1',
+  html: () => `<nest-test-5-2></nest-test-5-2>`
+})
+modjool.create({
+  tag: 'nest-test-5-2',
+  html: () => `✅ double nesting works`
+})
 
 
 /* === Console tests ==================================================== */

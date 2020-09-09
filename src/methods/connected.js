@@ -18,7 +18,6 @@ function advanced (context, options) {
       initPrivateId(...args)
       updateAttributes(...args)
       updateSlots(...args)
-      
       context.mj.instance.data = context.mj.new.data || runLifecycle(context, options, 'data') || {}
       runLifecycle(context, options, 'ready')
       updateBody(...args)
@@ -30,6 +29,7 @@ function advanced (context, options) {
         updateBody(context, options)
       }
       state.addElement(context)
+      context.dispatchEvent(new Event('mj-defined'))
     }
   }
 }
@@ -38,21 +38,34 @@ function simple (context, options) {
   context.mj = {}
   context.mj.tag = options.tag
   state.addElement(context)
+  context.dispatchEvent(new Event('mj-defined'))
 }
 
 export default { advanced, simple }
 
 function waitForParentElements (context, func) {
-  try {
-    if (context.closest(':not(:defined)') === null) {
-      func()
+  if (context.mj.constructorRun) {
+    try {
+      const closest = context.closest(':not(:defined)')
+      if (closest === null) {
+        func()
+      } else {
+        //Wait for parent to be ready
+        const definedFunc = () => {
+          waitForParentElements(context, func)
+          closest.removeEventListener('mj-defined', definedFunc)
+        }
+        closest.addEventListener('mj-defined', definedFunc)
+      }
+    } catch (err) {
+      if (!state.warnings.includes(':defined') && err.includes(':defined')) {
+        state.warnings.push(':defined')
+        console.warn('[Modjool] Browser does not support :defined CSS selector, possible custom element nesting bugs')
+        func()
+      } else {
+        console.error(err)
+      }
     }
-  } catch (err) {
-    if (!state.warnings.includes(':defined')) {
-      state.warnings.push(':defined')
-      console.warn('[Modjool] Browser does not support :defined CSS selector, possible custom element nesting bugs')
-    }
-    func()
   }
 }
 

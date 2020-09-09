@@ -22,8 +22,12 @@ function createSingle (createElement, options) {
 
 function defineAll(createElement) {
   const notDefined = document.querySelectorAll(':not(:defined)')
+  const list = []
   for (const el of notDefined) {
-    createSingle(createElement, el.nodeName.toLowerCase() || el.localName)
+    if (!list.includes(el.tagName)) {
+      createSingle(createElement, el.tagName.toLowerCase() || el.nodeName.toLowerCase() ||el.localName)
+    }
+    list.push(el.tagName)
   }
   return true
 }

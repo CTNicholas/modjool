@@ -61,11 +61,15 @@ function elementCreator (advanced, options) {
     }
   }
 
-  if (advanced) {
-    customElements.define(options.tag, ModjoolElement)
-    return !!customElements.get(options.tag)
-  } else {
-    customElements.define(options, ModjoolElement)
-    return !!customElements.get(options)
+  try {
+    if (advanced) {
+      customElements.define(options.tag, ModjoolElement)
+      return !!customElements.get(options.tag)
+    } else {
+      customElements.define(options, ModjoolElement)
+      return !!customElements.get(options)
+    }
+  } catch (err) {
+    console.error(err)
   }
 }
