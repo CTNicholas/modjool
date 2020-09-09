@@ -1,3 +1,5 @@
+import { attrProxy } from './utils.js'
+
 function updateAll (...args) {
   updateAttributes(...args)
   updateSlots(...args)
@@ -23,12 +25,12 @@ function updateAttributes (context, options) {
       context.mj.attributes[prop] = val
     }
   }
-  context.mj.instance.attr = context.mj.attributes
+  context.mj.instance.attr = attrProxy(context, options, context.mj.attributes)
 }
 
 function updateSlots (context, options) {
   if (context.isConnected) {
-    let slot = getSlotContent(context)
+    let slot = getSlotContent(context, options)
     context.slotConnected = true
     context.mj.instance.slot = slot
   }
@@ -41,18 +43,13 @@ function updateBody (context, options) {
 
     deleteElementHtml(context.mj.body)
     context.mj.body.appendChild(bodyFrag)
-
-    // If shadow DOM, removes template and leaves just shadow DOM
-    if (!options.inherit && context.innerHTML !== '') {
-      deleteElementHtml(context) 
-    }
   }
 }
 
 export { updateBody, updateSlots, updateAttributes, updateNew, updateAll }
 
 function buildElementCss (context, { css, scopedCss }, bodyFrag) {
-  const parsedCss = context.mj.new.css || css({ ...context.mj.instance })
+  const parsedCss = context.mj.new.css || css({ ...context.mj.instance }) || context.mj.styleContent
   if (parsedCss) {
     const cssTag = document.createElement('style')
     cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
@@ -75,17 +72,26 @@ function deleteElementHtml (body) {
   }
 }
 
-function getSlotContent (context) {
+function getSlotContent (context, { inherit }) {
   let slot
   const bodyFrag = createElement(context.mj.bodyContent)
-  const slotList = bodyFrag.querySelectorAll('slot[name]')
+  const slotList = bodyFrag.querySelectorAll('[slot]')
   if (slotList.length > 0) {
     slot = {}
     for (const s of slotList) {
-      slot[s.getAttribute('name')] = s.innerHTML
+      const slotName = s.getAttribute('slot')
+      if (inherit) {
+        slot[slotName] = s.outerHTML
+      } else {
+        slot[slotName] = `<slot name="${slotName}"></slot>`
+      }
     }
   } else {
-    slot = context.mj.bodyContent
+    if (inherit) {
+      slot = context.mj.bodyContent
+    } else {
+      slot = '<slot></slot>'
+    }
   }
   return slot
 }

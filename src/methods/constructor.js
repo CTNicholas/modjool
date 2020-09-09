@@ -1,6 +1,6 @@
 import { updateBody, updateSlots, updateAll, updateNew } from './update.js'
-import { runLifecycle } from './utils.js'
-import FUNCTIONS from './functions.js'
+import { attrProxy, runLifecycle } from './utils.js'
+import instanceFunctions from './functions.js'
 
 function advanced (context, options) {
   const instanceId = Math.random().toString(36).slice(-6)
@@ -21,9 +21,9 @@ function advanced (context, options) {
     loaded: false,
     reactiveAttributes: options.attributes,
     instance: {
-      attr: {},
+      attr: attrProxy(context, options, {}),
       data: {},
-      func: FUNCTIONS(context, options),
+      func: instanceFunctions(context, options),
       self: {
         id: instanceId,
         tag: options.tag,
@@ -52,9 +52,6 @@ function advanced (context, options) {
       js: null,
       leave: null,
       ready: null,
-    },
-    events: {
-      elementReady: new Event('mj-element-ready')
     },
     options: options
   }

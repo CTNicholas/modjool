@@ -7,7 +7,11 @@ function advanced (context, options) {
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
 
-    waitForParentElements(context, () => connectToDom())
+    if (options.inherit) {
+      waitForParentElements(context, () => connectToDom())
+    } else {
+      connectToDom()
+    }
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML

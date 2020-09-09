@@ -7,7 +7,7 @@ function advanced (context, options) {
       if (!keywords.includes(attr)) {
         return attr
       } else {
-        console.error(`ERROR: Modjool keyword used as element attribute name [${attr}]`)
+        console.error(`[Modjool] ERROR: Keyword used as element attribute name [${attr}]`)
       }
     })
   } else {

@@ -3,6 +3,7 @@ console.log('Running tests')
 let tempBody = '<div><div>inherit: false (no shadow dom):</div><div>inherit: true (shadow dom):</div></div>'
 let count = 1
 
+
 /* === Page tests ==================================================== */
 newElement({
   html: () => `✅ html works`
@@ -99,23 +100,42 @@ newElement({
 }})
 
 newElement({
-  ready: ({ self }) => {
+  attr: ['result'],
+  js: ({ self }) => {
     self.element.setAttribute('result', '✅ reactive attr works')
-    self.updateAll()
   },
   html: ({ attr }) => `${attr.result}`
 }, '', { attr: {
   result: '❌ reactive attr error'
 }})
 
+/* === Slots ==================================================== */
+newElement({
+  html: ({ slot }) => `${slot || '❌ single slot error'}`
+}, '✅ single slot works')
+
+newElement({
+  html: ({ slot }) => `
+    ${slot.icon && slot.text ? slot.icon + slot.text : '❌ multiple slots error'}
+  `
+}, '<span slot="icon">✅ </span><span slot="text">multiple slots work<?span>')
+
 
 /* === Console tests ==================================================== */
 newElement({
-  html: () => `Check console for 4 tests`
+  html: () => `Check console for more tests`
 })
 
+let logTest1 = 0
 newElement({
-  enter: ({ self }) => { console.log('✅ enter() works') }
+  enter: ({ self }) => {
+    console.log('✅ enter() works')
+    logTest1 = 1
+  },
+  ready: () => {
+    if (logTest1 < 1) { console.log('❌ enter() error') }
+    logTest1 = 0
+  }
 }, '')
 
 newElement({
@@ -143,8 +163,29 @@ newElement({
 }, '')
 
 
+/* === Method tests ==================================================== */
+modjool.wait().then(() => {
+  const notDef1 = document.querySelectorAll(':not(:defined)')
+  modjool.create()
+  const notDef2 = document.querySelectorAll(':not(:defined)')
+  if (notDef1.length > 0 && notDef2.length === 0) {
+    console.log('✅ auto-define create() works')
+  } else {
+    console.log('❌ auto-define create() error')
+  }
+})
+
+modjool.getAsync('a-1').then(a => {
+  if (a.length > 0) {
+    console.log('✅ getAsync() and get() works')
+  } else {
+    console.log('❌ getAsync() and get() error')
+  }
+})
+
+
 /* === Setup ==================================================== */
-document.querySelector('.tests').innerHTML = tempBody
+document.querySelector('.tests').innerHTML += tempBody
 
 function newElement(initObject, content = 'error', { tag = nextTag(), attr = {} } = {}) {
   let attrs = []
@@ -155,14 +196,14 @@ function newElement(initObject, content = 'error', { tag = nextTag(), attr = {} 
   }
   modjool.create({
     tag: tag,
-    attributes: attrs,
+    attr: attrs,
     inherit: true,
     ...initObject
   })
   const tag2 = nextTag()
   modjool.create({
     tag: tag2,
-    attributes: attrs,
+    attr: attrs,
     inherit: false,
     ...initObject
   })
