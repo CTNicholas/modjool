@@ -1,4 +1,4 @@
-import { modjool } from '../src/index.js'
+import { modjool } from '../src/index-umd.js'
 
 const CLASS_NAME = 'ModjoolElement'
 

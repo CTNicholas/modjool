@@ -1,8 +1,8 @@
 import keywords from '../keywords.js'
 
 function advanced (context, options) {
-  if (options.attributes !== undefined) {
-    return options.attributes.map(attr => {
+  if (options.attr !== undefined) {
+    return options.attr.map(attr => {
       attr = attr.toLowerCase()
       if (!keywords.includes(attr)) {
         return attr

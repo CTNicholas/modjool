@@ -34,29 +34,46 @@ function updateSlots (context, options) {
   }
 }
 
-function updateBody (context, { html, css, inherit, scopedCss }) {
+function updateBody (context, options) {
   if (context.isConnected) {
-    var tempEl = document.createElement('template')
-    const bodyString = context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
-    tempEl.innerHTML = bodyString
-    const bodyFrag = document.createDocumentFragment()
-    bodyFrag.appendChild(tempEl.content)
+    const bodyFrag = getFragmentOfElementHtml(context, options)
+    buildElementCss(context, options, bodyFrag)
 
-    const parsedCss = context.mj.new.css || css({ ...context.mj.instance })
-    if (parsedCss) {
-      const cssTag = document.createElement('style')
-      cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
-      cssTag.textContent = scopedCss ? addSelector(context.mj.instance.self.select, parsedCss) : parsedCss
-      bodyFrag.appendChild(cssTag)
-    }
-    while (context.mj.body.firstChild) {
-      context.mj.body.removeChild(context.mj.body.firstChild)
-    }
+    deleteElementHtml(context.mj.body)
     context.mj.body.appendChild(bodyFrag)
+
+    // If shadow DOM, removes template and leaves just shadow DOM
+    if (!options.inherit && context.innerHTML !== '') {
+      deleteElementHtml(context) 
+    }
   }
 }
 
 export { updateBody, updateSlots, updateAttributes, updateNew, updateAll }
+
+function buildElementCss (context, { css, scopedCss }, bodyFrag) {
+  const parsedCss = context.mj.new.css || css({ ...context.mj.instance })
+  if (parsedCss) {
+    const cssTag = document.createElement('style')
+    cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
+    cssTag.textContent = scopedCss ? addSelector(context.mj.instance.self.select, parsedCss) : parsedCss
+    bodyFrag.appendChild(cssTag)
+  }
+}
+
+function getFragmentOfElementHtml (context, { html }) {
+  const tempEl = document.createElement('template')
+  const bodyFrag = document.createDocumentFragment()
+  tempEl.innerHTML = context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
+  bodyFrag.appendChild(tempEl.content)
+  return bodyFrag
+}
+
+function deleteElementHtml (body) {
+  while (body.firstChild) {
+    body.removeChild(body.firstChild)
+  }
+}
 
 function getSlotContent (context) {
   let slot
