@@ -58,7 +58,7 @@ function waitForParentElements (context, func) {
         closest.addEventListener('mj-defined', definedFunc)
       }
     } catch (err) {
-      if (!state.warnings.includes(':defined') && err.includes(':defined')) {
+      if (!state.warnings.includes(':defined') && err.toString().includes(':defined')) {
         state.warnings.push(':defined')
         console.warn('[Modjool] Browser does not support :defined CSS selector, possible custom element nesting bugs')
         func()

@@ -18,6 +18,7 @@ function advanced (context, options) {
     body: {},
     bodyContent: '',
     styleContent: '',
+    currentBody: '',
     loaded: false,
     reactiveAttributes: options.attributes,
     instance: {

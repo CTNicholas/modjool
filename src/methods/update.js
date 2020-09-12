@@ -40,32 +40,47 @@ function updateSlots (context, options) {
 
 function updateBody (context, options) {
   if (context.isConnected) {
-    const bodyFrag = getFragmentOfElementHtml(context, options)
-    buildElementCss(context, options, bodyFrag)
+    const newHtml = getHtml(context, options)
+    const newCss = getCss(context, options)
+    const newBody = newHtml + newCss
 
-    deleteElementHtml(context.mj.body)
-    context.mj.body.appendChild(bodyFrag)
+    if (newBody !== context.mj.currentBody) {
+      let bodyFrag = document.createDocumentFragment()
+      addHtml(bodyFrag, newHtml)
+      addCss(bodyFrag, newCss, context, options)
+
+      deleteElementHtml(context.mj.body)
+      context.mj.body.appendChild(bodyFrag)
+      context.mj.currentBody = newBody
+    }
   }
 }
 
 export { updateBody, updateSlots, updateAttributes, updateNew, updateAll }
 
-function buildElementCss (context, { css, scopedCss }, bodyFrag) {
-  const parsedCss = context.mj.new.css || css({ ...context.mj.instance }) || context.mj.styleContent
-  if (parsedCss) {
+function addHtml (bodyFrag, newHtml) {
+  if (newHtml) {
+    const tempEl = document.createElement('template')
+    tempEl.innerHTML = newHtml
+    bodyFrag.appendChild(tempEl.content)
+  }
+}
+
+function addCss (bodyFrag, newCss, context, { scopedCss }) {
+  if (newCss) {
     const cssTag = document.createElement('style')
     cssTag.setAttribute('id', `mj-style-${context.mj.id}`)
-    cssTag.textContent = scopedCss ? addSelector(context.mj.instance.self.select, parsedCss) : parsedCss
+    cssTag.textContent = scopedCss ? addSelector(context.mj.instance.self.select, newCss) : newCss
     bodyFrag.appendChild(cssTag)
   }
 }
 
-function getFragmentOfElementHtml (context, { html }) {
-  const tempEl = document.createElement('template')
-  const bodyFrag = document.createDocumentFragment()
-  tempEl.innerHTML = context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
-  bodyFrag.appendChild(tempEl.content)
-  return bodyFrag
+function getHtml (context, { html }) {
+  return context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
+}
+
+function getCss (context, { css, scopedCss }) {
+  return context.mj.new.css || css({ ...context.mj.instance }) || context.mj.styleContent
 }
 
 function deleteElementHtml (body) {
