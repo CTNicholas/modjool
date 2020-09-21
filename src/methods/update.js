@@ -32,9 +32,10 @@ function updateAttributes (context, options) {
 
 function updateSlots (context, options) {
   if (context.isConnected) {
-    let slot = getSlotContent(context, options)
+    const { slot, slotVal } = getSlotContent(context, options)
     context.slotConnected = true
     context.mj.instance.slot = slot
+    context.mj.instance.slotVal = slotVal
   }
 }
 
@@ -91,12 +92,15 @@ function deleteElementHtml (body) {
 
 function getSlotContent (context, { inherit }) {
   let slot
+  let slotVal
   const bodyFrag = createElement(context.mj.bodyContent)
   const slotList = bodyFrag.querySelectorAll('[slot]')
   if (slotList.length > 0) {
     slot = {}
+    slotVal = {}
     for (const s of slotList) {
       const slotName = s.getAttribute('slot')
+      slotVal[slotName] = s.innerHTML
       if (inherit) {
         slot[slotName] = s.outerHTML
       } else {
@@ -104,13 +108,14 @@ function getSlotContent (context, { inherit }) {
       }
     }
   } else {
+    slotVal = context.mj.bodyContent
     if (inherit) {
       slot = context.mj.bodyContent
     } else {
       slot = '<slot></slot>'
     }
   }
-  return slot
+  return { slot, slotVal }
 }
 
 function createElement (str) {

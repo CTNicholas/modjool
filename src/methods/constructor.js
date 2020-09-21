@@ -44,6 +44,7 @@ function advanced (context, options) {
         ready: ready => updateNew(context, options, { ready }),
       },
       slot: {},
+      slotVal: {}
     },
     new: {
       css: null,
