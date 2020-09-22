@@ -1,5 +1,11 @@
 import { attrProxy } from './utils.js'
 
+/**
+ * If element connected, retrieve and set attributes
+ * Add proxy to attr, to monitor for changes in the modjool API
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ */
 function updateAttributes (context, options) {
   if (context.isConnected) {
     context.mj.attributes = {}

@@ -1,3 +1,6 @@
+/**
+ * Default options object for modjool.create()
+ */
 export default {
   tag: 'no-name',
   inherit: true,

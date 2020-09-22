@@ -10,6 +10,7 @@ function create (...options) {
 function modjoolLiteElement (simple, elementName) {
   class ModjoolLiteElement extends HTMLElement {
     constructor (...args) {
+      // noinspection UnnecessaryLocalVariableJS
       const polyfill = super(...args)
       return polyfill
     }
