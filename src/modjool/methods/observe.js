@@ -1,4 +1,4 @@
-import keywords from '../keywords.js'
+import keywords from '../config/keywords.js'
 
 function advanced (context, options) {
   if (options.attr !== undefined) {

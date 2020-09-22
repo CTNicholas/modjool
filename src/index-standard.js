@@ -1,3 +1,3 @@
-import modjool from './modjool.js'
+import modjool from './modjool/modjool.js'
 
 export default modjool

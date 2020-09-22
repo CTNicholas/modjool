@@ -1,4 +1,4 @@
-import modjool from './modjool.js'
-import modjoolLite from './modjoolLite.js'
+import modjool from './modjool/modjool.js'
+import modjoolLite from './modjool/modjoolLite.js'
 
 export { modjool, modjoolLite }

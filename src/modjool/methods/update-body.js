@@ -1,44 +1,3 @@
-import { attrProxy } from './utils.js'
-
-function updateAll (...args) {
-  updateAttributes(...args)
-  updateSlots(...args)
-  updateBody(...args)
-}
-
-function updateNew (context, options, vals) {
-  for (const [key, val] of Object.entries(vals)) {
-    context.mj.new[key] = val
-    updateBody(context, options)
-  }
-}
-
-function updateAttributes (context, options) {
-  if (context.isConnected) {
-    context.mj.attributes = {}
-    for (let i = 0; i < context.attributes.length; i++) {
-      const prop = context.attributes[i].nodeName.toLowerCase()
-      if (!prop.toLowerCase().startsWith('mj-')) {
-        let val = context.attributes[i].nodeValue
-        if (val === '') {
-          val = true
-        }
-        context.mj.attributes[prop] = val
-      }
-    }
-    context.mj.instance.attr = attrProxy(context, options, context.mj.attributes)
-  }
-}
-
-function updateSlots (context, options) {
-  if (context.isConnected) {
-    const { slot, slotVal } = getSlotContent(context, options)
-    context.slotConnected = true
-    context.mj.instance.slot = slot
-    context.mj.instance.slotVal = slotVal
-  }
-}
-
 function updateBody (context, options) {
   if (context.isConnected) {
     const newHtml = getHtml(context, options)
@@ -57,7 +16,7 @@ function updateBody (context, options) {
   }
 }
 
-export { updateBody, updateSlots, updateAttributes, updateNew, updateAll }
+export { updateBody }
 
 function addHtml (bodyFrag, newHtml) {
   if (newHtml) {
@@ -80,7 +39,7 @@ function getHtml (context, { html }) {
   return context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
 }
 
-function getCss (context, { css, scopedCss }) {
+function getCss (context, { css }) {
   return context.mj.new.css || css({ ...context.mj.instance }) || context.mj.styleContent
 }
 
@@ -88,44 +47,6 @@ function deleteElementHtml (body) {
   while (body.firstChild) {
     body.removeChild(body.firstChild)
   }
-}
-
-function getSlotContent (context, { inherit }) {
-  let slot
-  let slotVal
-  const bodyFrag = createElement(context.mj.bodyContent)
-  const slotList = bodyFrag.querySelectorAll('[slot]')
-  if (slotList.length > 0) {
-    slot = {}
-    slotVal = {}
-    for (const s of slotList) {
-      const slotName = s.getAttribute('slot')
-      slotVal[slotName] = s.innerHTML
-      if (inherit) {
-        slot[slotName] = s.outerHTML
-      } else {
-        slot[slotName] = `<slot name="${slotName}"></slot>`
-      }
-    }
-  } else {
-    slotVal = context.mj.bodyContent
-    if (inherit) {
-      slot = context.mj.bodyContent
-    } else {
-      slot = '<slot></slot>'
-    }
-  }
-  return { slot, slotVal }
-}
-
-function createElement (str) {
-  var frag = document.createDocumentFragment()
-  var elem = document.createElement('div')
-  elem.innerHTML = str
-  while (elem.childNodes[0]) {
-    frag.appendChild(elem.childNodes[0])
-  }
-  return frag
 }
 
 function addSelector (selfSelect, css) {

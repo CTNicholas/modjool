@@ -1,3 +1,3 @@
-import modjoolLite from './modjoolLite.js'
+import modjoolLite from './modjool/modjoolLite.js'
 
 export default modjoolLite
