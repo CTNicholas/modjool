@@ -4,7 +4,9 @@ import { updateBody } from './update-body.js'
 
 /**
  * Update element's attributes, slots, and body
- * @param  {...any} args - The custom element, and the element's options
+ * @param {...any} args
+ * @param {ModjoolElement} args[0] - The custom element
+ * @param {Object} args[1] - The custom element's options
  */
 function updateAll (...args) {
   updateAttributes(...args)

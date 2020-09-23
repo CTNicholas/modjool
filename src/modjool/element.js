@@ -12,11 +12,11 @@ import DISCONNECTED from './methods/disconnected.js'
 /**
  * Creates a ModjoolElement class, and defines it.
  * All methods call either an advanced or simple function, depending on type.
- * @param {Boolean} advancedApi - True if advanced API used, false if not
  * @param {Object|String} options - Options for this element, a tag name string if simple
+ * @param {Boolean} advancedApi - True if advanced API used, false if not
  * @returns {Boolean} - True if element successfully defined, false if not
  */
-function elementCreator (advancedApi, options) {
+function elementCreator (options, advancedApi) {
   const elementType = advancedApi ? 'advanced' : 'simple'
   
   class ModjoolElement extends HTMLElement {
@@ -74,10 +74,9 @@ function elementCreator (advancedApi, options) {
  * @param {Object|String} options - Options for this element, a tag name string if simple
  * @returns {Boolean} - True if element successfully defined, false if not
  */
-export default function (advancedApi, options) {
+export default function (options, advancedApi) {
   if (advancedApi) {
     options = { ...state.config, ...options }
   }
-  // return elementCreator(advanced, options)
-  return whenReady(() => elementCreator(advancedApi, options))
+  return whenReady(() => elementCreator(options, advancedApi))
 }

@@ -140,6 +140,26 @@ newElement({
   `
 }, '<span slot="icon">✅ </span><span slot="text">multiple slots work</span>')
 
+newElement({
+  html: ({ slotVal }) => `${slotVal || '❌ single slotVal error'}`
+}, '✅ single slotVal works')
+
+newElement({
+  ready: ({ data, slot, slotVal }) => {
+    data.diff = slot.icon !== slotVal.icon && slotVal.icon === slotVal.text
+    data.error = `❌ multiple slotVals error`
+    if (!data.diff) console.log(`❌ multiple slotVals error \nslot: ${slot.icon} \nslotVal: ${slotVal.icon}`)
+  },
+  html: ({ data, slotVal }) => `
+    ${data.diff ? slotVal.icon : data.error}
+  `,
+  css: () => `
+    span span::before { content: '❌ multiple slotVals error' }
+    span::before { content: '✅ multiple slotVals work'}
+  `
+}, '<span slot="icon"><span></span></span><span slot="text"><span></span></span>')
+
+
 
 /* === Nesting ==================================================== */
 modjool.create({
