@@ -21,11 +21,10 @@ export { updateSlots }
  *   slot: HTML required to output the current slot in html() or css()
  *   slotVal: The HTML content of the slot as a string
  * @param {ModjoolElement} context - The custom element
- * @param {Object} options
- * @param {Boolean} options.inherit - True if shadow DOM disabled, fslse if enabled
+ * @param {Object} options - The custom element's options
  * @returns {Object} - slot & slotVal content
  */
-function getSlotContent (context, { inherit }) {
+function getSlotContent (context, options) {
   let slot
   let slotVal
   const bodyFrag = createElement(context.mj.bodyContent)
@@ -36,18 +35,18 @@ function getSlotContent (context, { inherit }) {
     for (const s of slotList) {
       const slotName = s.getAttribute('slot')
       slotVal[slotName] = s.innerHTML
-      if (inherit) {
-        slot[slotName] = s.outerHTML
-      } else {
+      if (options.shadowDom) {
         slot[slotName] = `<slot name="${slotName}"></slot>`
+      } else {
+        slot[slotName] = s.outerHTML
       }
     }
   } else {
     slotVal = context.mj.bodyContent
-    if (inherit) {
-      slot = context.mj.bodyContent
-    } else {
+    if (options.shadowDom) {
       slot = '<slot></slot>'
+    } else {
+      slot = context.mj.bodyContent
     }
   }
   return { slot, slotVal }

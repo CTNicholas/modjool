@@ -23,7 +23,7 @@ function advanced (context, options) {
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
 
-    if (options.inherit) {
+    if (!options.shadowDom) {
       waitForParentElements(context, () => connectToDom())
     } else {
       connectToDom()
@@ -111,7 +111,7 @@ function waitForParentElements (context, func) {
  * @param {Object} options 
  */
 function initPrivateId (context, options) {
-  if (options.id === true) {
+  if (options.modjoolId) {
     context.setAttribute('mj-id', context.mj.id)
   }
 }

@@ -21,10 +21,10 @@ import instanceFunctions from './functions.js'
 function advanced (context, options) {
   const instanceId = Math.random().toString(36).slice(-6)
   const selector = function (rule = '') {
-    if (options.inherit) {
-      return `${options.tag}[mj-id="${instanceId}"]${rule}`
-    } else {
+    if (options.shadowDom) {
       return `:host(${options.tag}[mj-id="${instanceId}"]${rule})`
+    } else {
+      return `${options.tag}[mj-id="${instanceId}"]${rule}`
     }
   }
   context.mj = {}
@@ -76,7 +76,7 @@ function advanced (context, options) {
   }
 
   // Create shadow DOM, if enabled
-  if (options.inherit === false) {
+  if (options.shadowDom) {
     context.attachShadow({ mode: 'open' })
     context.mj.body = context.shadowRoot
   } else {

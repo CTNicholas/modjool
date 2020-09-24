@@ -3,8 +3,8 @@
  */
 export default {
   tag: 'no-name',
-  inherit: true,
-  id: true,
+  shadowDom: false,
+  modjoolId: true,
   scopedCss: true,
   unhide: true,
   html: () => '',

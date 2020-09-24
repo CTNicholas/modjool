@@ -6,10 +6,11 @@ export default [
   'js',
   'css',
   'tag',
-  'inherit',
+  'shadowDom',
   'attributes',
   'enter',
   'ready',
   'leave',
-  'data'
+  'data',
+  'modjoolId'
 ]
