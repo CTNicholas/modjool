@@ -6,7 +6,7 @@ export default {
   shadowDom: false,
   modjoolId: true,
   scopedCss: true,
-  unhide: true,
+  unhide: false,
   html: () => '',
   css: () => '',
   js: undefined,
