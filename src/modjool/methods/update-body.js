@@ -54,23 +54,31 @@ function addCss (bodyFrag, newCss, context, { scopedCss }) {
 
 /**
  * Gets HTML for custom element, and returns
+ * Returns self.html() if set, then HTML hook, then body content
  * @param {ModjoolElement} context
  * @param {Function} html
  * @returns {String} - updated HTML
  */
 function getHtml (context, { html }) {
-  return context.mj.new.html || html({ ...context.mj.instance }) || context.mj.bodyContent
+  if (context.mj.new.html) {
+    return context.mj.new.html({ ...context.mj.instance })
+  }
+  return html({ ...context.mj.instance }) || context.mj.bodyContent
 }
 
 /**
  * Gets CSS for custom element, and returns
+ * Returns self.css() if set, then CSS hook, then style content
  * @param {ModjoolElement} context
  * @param {Object} options
  * @param {Function} options.css
  * @returns {String} - The updated CSS
  */
 function getCss (context, { css }) {
-  return context.mj.new.css || css({ ...context.mj.instance }) || context.mj.styleContent
+  if (context.mj.new.css) {
+    return context.mj.new.css ({ ...context.mj.instance })
+  }
+  return css({ ...context.mj.instance }) || context.mj.styleContent
 }
 
 /**
