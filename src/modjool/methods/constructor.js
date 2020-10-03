@@ -1,5 +1,5 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
-import { attrProxy, runLifecycle } from './utils.js'
+import { addProxy, runLifecycle } from './utils.js'
 import instanceFunctions from './functions.js'
 
 /**
@@ -39,7 +39,7 @@ function advanced (context, options) {
     loaded: false,
     reactiveAttributes: options.attributes,
     instance: {
-      attr: attrProxy(context, options, {}),
+      attr: addProxy(context, options, {}),
       data: {},
       func: instanceFunctions(context, options),
       self: {

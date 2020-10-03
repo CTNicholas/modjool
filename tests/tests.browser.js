@@ -1,6 +1,6 @@
 import { modjool } from 'modjool'
 console.log('Running tests')
-let tempBody = '<div><div>inherit: false (no shadow dom):</div><div>inherit: true (shadow dom):</div></div>'
+let tempBody = '<div><div>shadowDom false:</div><div>shadowDom true:</div></div>'
 let count = 1
 
 
@@ -20,6 +20,11 @@ newElement({
   html: () => '<div>scopedCss works</div>',
   css: () => `*::before { content: '✅ ' }` /* If ticks on every element, this is not working */
 })
+
+newElement({
+  html: () => `<style>div.specificcsstest:before { content: '❌ css affecting element error'; }</style><div class="specificcsstest"></div>`,
+  css: () => `div.specificcsstest:before { content: '✅ css affecting element works' !important; }`
+}, '')
 
 newElement({
   html: () => '<div></div>',
@@ -45,6 +50,7 @@ newElement({
   },
   html: ({ data, self }) => `<div>${data.result ? '✅' : '❌'} <small>tag: ${self.tag}, id: ${self.id}, select: ${self.select()}</small></div>`
 })
+
 
 /* === Lifecycle tests ==================================================== */
 newElement({
@@ -77,14 +83,14 @@ newElement({
 
 newElement({
   js: ({ data, self }) => { 
-    self.html('✅ self.html() works')
+    self.html(({ self }) => '✅ self.html() works' + self.id)
   },
   html: ({ data }) => `❌ self.html() error`
 })
 
 newElement({
   ready: ({ data, self }) => { 
-    self.css(`div::before { content: '✅ ' }`)
+    self.css(() => `div::before { content: '✅ ' }`)
   },
   html: ({ data }) => `<div>self.css() works</div>`,
   css: () => `div::before { content: '❌ ' }`
@@ -158,6 +164,20 @@ newElement({
     span::before { content: '✅ multiple slotVals work'}
   `
 }, '<span slot="icon"><span></span></span><span slot="text"><span></span></span>')
+
+newElement({
+  html: ({ slot }) => slot.three ? '❌ nested slot ignored error' : slot.one + slot.two
+}, '<span slot="one">✅ <span slot="three"></span></span><span slot="two">nested slot ignored works</span>')
+
+modjool.create({
+  tag: 'slot-nest-test-1',
+  html: ({ slot }) => slot.two
+})
+newElement({
+  html: ({ slot }) => slot.two || Object.keys(slot).length !== 2 ? '❌ nested slots error' : '✅ nested slots work'
+}, `<span slot="three">✅</span><span slot="four">nested slot ignored works</span><slot-nest-test-1>
+<span slot="one"></slot><span slot="two">❌ nested slot error</slot>
+</slot-nest-test-1>`)
 
 
 
@@ -274,7 +294,7 @@ modjool.getAsync('a-1').then(a => {
 /* === Setup ==================================================== */
 document.querySelector('.tests').innerHTML += tempBody
 
-function newElement(initObject, content = 'error', { tag = nextTag(), attr = {} } = {}) {
+function newElement(initObject, content = '', { tag = nextTag(), attr = {} } = {}) {
   let attrs = []
   let attrString = ''
   for (const [key, val] of Object.entries(attr)) {
@@ -284,14 +304,14 @@ function newElement(initObject, content = 'error', { tag = nextTag(), attr = {} 
   modjool.create({
     tag: tag,
     attr: attrs,
-    inherit: true,
+    shadowDom: false,
     ...initObject
   })
   const tag2 = nextTag()
   modjool.create({
     tag: tag2,
     attr: attrs,
-    inherit: false,
+    shadowDom: true,
     ...initObject
   })
   tempBody += `<div><${tag}${attrString}>${content}</${tag}><${tag2}${attrString}>${content}</${tag2}></div>`

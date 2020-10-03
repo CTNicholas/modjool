@@ -28,7 +28,7 @@ function runLifecycle ({ mj }, options, apiProp, extra = false) {
  * @param {Object} options - The custom element's options
  * @param {Object} proxyObj - The current attribute values
  */
-function attrProxy (context, options, proxyObj = {}) {
+function addProxy (context, options, proxyObj = {}) {
   return new Proxy(proxyObj, {
     set (obj, prop, value) {
       context.setAttribute(prop, value)
@@ -37,4 +37,4 @@ function attrProxy (context, options, proxyObj = {}) {
   })
 }
 
-export { runLifecycle, attrProxy }
+export { runLifecycle, addProxy }

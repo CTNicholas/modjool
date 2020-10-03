@@ -16,7 +16,7 @@ export { updateSlots }
 
 /**
  * Gets slot and slotVal content. If multiple slots, return an object with 
- * slot names as properties. 
+ * slot names as properties. Only top-level elements returned as slots.
  * Explained:
  *   slot: HTML required to output the current slot in html() or css()
  *   slotVal: The HTML content of the slot as a string
@@ -27,46 +27,41 @@ export { updateSlots }
 function getSlotContent (context, options) {
   let slot
   let slotVal
-  const bodyFrag = createElement(context.mj.bodyContent)
-  const slotList = bodyFrag.querySelectorAll('[slot]')
+  const tempId = 'mj-8Wi7fiDtPtAWMhLQop1Smg'
+  const bodyFrag = createElement(context.mj.bodyContent, tempId)
+  const slotList = bodyFrag.querySelectorAll(`#${tempId} > [slot]`)
+
   if (slotList.length > 0) {
+    // Multiple slots
     slot = {}
     slotVal = {}
+
     for (const s of slotList) {
       const slotName = s.getAttribute('slot')
       slotVal[slotName] = s.innerHTML
-      if (options.shadowDom) {
-        slot[slotName] = `<slot name="${slotName}"></slot>`
-      } else {
-        slot[slotName] = s.outerHTML
-      }
+      slot[slotName] = options.shadowDom ? `<slot name="${slotName}"></slot>` : s.outerHTML
     }
+
   } else {
+    // Single slot
     slotVal = context.mj.bodyContent
-    if (options.shadowDom) {
-      slot = '<slot></slot>'
-    } else {
-      slot = context.mj.bodyContent
-    }
+    slot = options.shadowDom ? '<slot></slot>' : context.mj.bodyContent
   }
   return { slot, slotVal }
 }
 
 /**
- * Create an document fragment containing a specified element, and returns it
+ * Create an document fragment containing a specified element, and returns it,
+ * contained in a div element with the ID specified
  * @param {String} htmlString - innerHTML of element
+ * @param {String} id - ID of parent element
  * @returns {DocumentFragment} - Fragment containing parsed htmlString
  */
-function createElement (htmlString) {
+function createElement (htmlString, id = '') {
   const frag = document.createDocumentFragment()
-
-  //Temporary element
   const elem = document.createElement('div')
   elem.innerHTML = htmlString
-
-  // While not empty, move first child to parent, return without elem
-  while (elem.childNodes[0]) {
-    frag.appendChild(elem.childNodes[0])
-  }
+  elem.id = id
+  frag.appendChild(elem)
   return frag
 }
