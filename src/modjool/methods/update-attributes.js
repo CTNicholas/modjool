@@ -1,4 +1,4 @@
-import { addProxy } from './utils.js'
+import { attrProxy } from './utils.js'
 
 /**
  * If element connected, retrieve and set attributes
@@ -19,7 +19,7 @@ function updateAttributes (context, options) {
         context.mj.attributes[prop] = val
       }
     }
-    context.mj.instance.attr = addProxy(context, options, context.mj.attributes)
+    context.mj.instance.attr = attrProxy(context, options, context.mj.attributes)
   }
 }
 

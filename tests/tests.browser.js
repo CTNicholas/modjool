@@ -38,14 +38,14 @@ newElement({
 })
 
 newElement({
-  js: ({ data, self }) => { 
+  js: ({ data, self }) => {
     data.result = self.id && self.tag && self.select()
   },
   html: ({ data, self }) => `<div>${data.result ? '✅ self.tag, self.id, self.select works' : '❌ self.tag, self.id, self.select error'}`
 })
 
 newElement({
-  js: ({ data, self }) => { 
+  js: ({ data, self }) => {
     data.result = self.id && self.tag && self.select()
   },
   html: ({ data, self }) => `<div>${data.result ? '✅' : '❌'} <small>tag: ${self.tag}, id: ${self.id}, select: ${self.select()}</small></div>`
@@ -70,26 +70,36 @@ newElement({
   html: ({ data }) => `${data.text || '❌  data(), ready(), js() error'}`
 })
 
-/* === Self tests ==================================================== */
 newElement({
-  js: ({ data, self }) => { 
+  data: ({ data }) => ({ text: '❌' }),
+  ready: ({ data }) => { data.text += ' reactive data error' },
+  js: ({ data }) => {
+    setTimeout(() => { data.text = '✅ reactive data works' })
+  },
+  html: ({ data }) => `${data.text}`
+})
+
+/* === Self tests ==================================================== */
+let selfUpdateTest = '❌ self.update() error'
+newElement({
+  js: ({ data, self }) => {
     setTimeout(() => {
-      data.text = '✅ self.update() works'
+      selfUpdateTest = '✅ self.update() works'
       self.update()
     })
   },
-  html: ({ data }) => `${data.text || '❌ self.update() error'}`
+  html: ({ data }) => selfUpdateTest
 })
 
 newElement({
-  js: ({ data, self }) => { 
-    self.html(({ self }) => '✅ self.html() works' + self.id)
+  js: ({ data, self }) => {
+    self.html(({ slot, self }) => slot + self.id)
   },
   html: ({ data }) => `❌ self.html() error`
-})
+}, '✅ self.html() works')
 
 newElement({
-  ready: ({ data, self }) => { 
+  ready: ({ data, self }) => {
     self.css(() => `div::before { content: '✅ ' }`)
   },
   html: ({ data }) => `<div>self.css() works</div>`,
@@ -97,7 +107,7 @@ newElement({
 })
 
 newElement({
-  ready: ({ data, self }) => { 
+  ready: ({ data, self }) => {
     self.js(() => data.text = '✅ self.js() works')
   },
   js: ({ data }) => data.text = `❌ self.js() error`,
@@ -108,9 +118,9 @@ newElement({
 newElement({
   html: ({ attr }) => `${attr.title} ${attr.subtitle}`
 }, '', { attr: {
-  title: '✅',
-  subtitle: 'attr works'
-}})
+    title: '✅',
+    subtitle: 'attr works'
+  }})
 
 newElement({
   attr: ['result'],
@@ -119,8 +129,8 @@ newElement({
   },
   html: ({ attr }) => `${attr.result}`
 }, '', { attr: {
-  result: '❌ reactive attr error'
-}})
+    result: '❌ reactive attr error'
+  }})
 
 newElement({
   attr: ['result'],
@@ -131,8 +141,8 @@ newElement({
   },
   html: ({ attr, data }) => `${data.result.length ? data.result : data.error}`
 }, '', { attr: {
-  result: '❌ change attr proxy error'
-}})
+    result: '❌ change attr proxy error'
+  }})
 
 
 /* === Slots ==================================================== */
@@ -252,7 +262,7 @@ newElement({
 })
 
 newElement({
-  enter: ({ data, self }) => { 
+  enter: ({ data, self }) => {
     self.leave(() => console.log('✅ self.leave() works'))
   },
   ready: ({ self }) => self.remove(),

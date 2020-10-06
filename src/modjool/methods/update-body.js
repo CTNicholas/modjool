@@ -1,10 +1,12 @@
 /**
  * Updates custom element's html and css, if it has changed
+ * If update request sent while currently running lifecycle event,
+ * return, and wait for it to finish.
  * @param {ModjoolElement} context - The custom element
  * @param {Object} options - The custom element's options
  */
 function updateBody (context, options) {
-  if (context.isConnected) {
+  if (context.isConnected && !context.mj.runningLifecycle) {
     const newHtml = getHtml(context, options)
     const newCss = getCss(context, options)
     const newBody = newHtml + newCss

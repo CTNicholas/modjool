@@ -34,7 +34,7 @@ function advanced (context, options) {
       initPrivateId(...args)
       updateAttributes(...args)
       updateSlots(...args)
-      context.mj.instance.data = context.mj.new.data || runLifecycle(context, options, 'data') || {}
+      setData(...args, context.mj.new.data || runLifecycle(context, options, 'data') || {})
       runLifecycle(context, options, 'ready')
       updateBody(...args)
       
@@ -64,6 +64,22 @@ function simple (context, options) {
 }
 
 export default { advanced, simple }
+
+/**
+ * Iterates through data and sets the same values to mj.instance.data
+ * @param {ModjoolElement} context - the custom element to update
+ * @param {Object} options - The custom element's options
+ * @param {Object} data - The new data value
+ */
+function setData (context, options, data) {
+  if (data === null) {
+    return null
+  }
+
+  for (const [prop, val] of Object.entries(data)) {
+    context.mj.instance.data[prop] = val
+  }
+}
 
 /**
  * Waits for parent elements to define themselves, before running func.
