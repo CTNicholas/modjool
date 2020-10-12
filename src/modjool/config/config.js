@@ -7,6 +7,7 @@ export default {
   modjoolId: true,
   scopedCss: true,
   unhide: false,
+  reactive: true,
   html: () => '',
   css: () => '',
   js: undefined,

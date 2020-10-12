@@ -15,12 +15,6 @@ import { updateBody } from './update-body'
  * @returns {null|Object} - Null if failed, otherwise function result or {} if no result
  */
 function runLifecycle ({ mj }, options, apiProp, extra = false) {
-  /*
-  if (mj.runningLifecycle === true) {
-    return null
-  }
-  */
-
   let result = null
   mj.runningLifecycle = true
 
@@ -48,8 +42,10 @@ function runLifecycle ({ mj }, options, apiProp, extra = false) {
 function attrProxy (context, options, proxyObj = {}) {
   return new Proxy(proxyObj, {
     set (obj, prop, value) {
-      context.setAttribute(prop, value)
-      return Reflect.set(...arguments)
+      if (!context.settingAttributes) {
+        context.setAttribute(prop, value)
+        return Reflect.set(...arguments)
+      }
     }
   })
 }

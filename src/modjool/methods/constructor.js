@@ -36,13 +36,13 @@ function advanced (context, options) {
     bodyContent: '',
     styleContent: '',
     currentBody: '',
-    updateBodyNext: false,
     runningLifecycle: false,
+    settingAttributes: false,
     loaded: false,
     reactiveAttributes: options.attributes,
     instance: {
-      attr: attrProxy(context, options, {}),
-      data: dataProxy(context, options, {}),
+      attr: options.reactive ? attrProxy(context, options, {}) : {},
+      data: options.reactive ? dataProxy(context, options, {}) : {},
       func: instanceFunctions(context, options),
       self: {
         id: instanceId,
