@@ -114,6 +114,17 @@ newElement({
   html: ({ data }) => data.text
 })
 
+newElement({
+  ready: ({ attr, data, self }) => {
+    data.result = '❌ self.attrHook() error'
+    self.attrHook('test', () => data.result = '✅ self.attrHook() works')
+    attr.test = 'hello'
+  },
+  html: ({ attr, data }) => `${data.result}`
+}, '')
+
+
+
 /* === Attributes =============================================== */
 newElement({
   html: ({ attr }) => `${attr.title} ${attr.subtitle}`
@@ -160,6 +171,7 @@ newElement({
 }, '', { attr: {
     result: '❌ attr lifecycle error'
   }})
+
 
 
 /* === Slots ==================================================== */

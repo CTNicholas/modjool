@@ -46,6 +46,7 @@ function advanced (context, options) {
       attr: {},
       data: {},
       func: instanceFunctions(context, options),
+      elem: {},
       self: {
         id: instanceId,
         tag: options.tag,
@@ -113,6 +114,7 @@ function advanced (context, options) {
 
   // If shadow DOM, set self.element to the host (the element containing the shadow DOM)
   context.mj.instance.self.element = context.mj.body.host ? context.mj.body.host : context.mj.body
+  context.mj.instance.elem = context.mj.instance.self.element
 
   // Constructor complete, run "enter" lifecycle
   context.mj.constructorRun = true
