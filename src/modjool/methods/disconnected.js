@@ -10,6 +10,9 @@ import { runLifecycle } from './utils.js'
 function advanced (context, options) {
   runLifecycle(context, options, 'leave')  
   context.mj.body.innerHTML = ''
+  if (context.mj.observer && context.mj.observer.disconnect) {
+    context.mj.observer.disconnect()
+  }
   context.mj = {}
   state.removeElement(context)
 }

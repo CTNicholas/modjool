@@ -3,6 +3,7 @@
  */
 export default {
   tag: 'no-name',
+  attr: [],
   shadowDom: false,
   modjoolId: true,
   scopedCss: true,

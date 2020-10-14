@@ -31,7 +31,7 @@ function advanced (context, options) {
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML
-      initPrivateId(...args)
+      //initPrivateId(...args)
       updateAttributes(...args)
       updateSlots(...args)
       setData(...args, context.mj.new.data || runLifecycle(context, options, 'data') || {})

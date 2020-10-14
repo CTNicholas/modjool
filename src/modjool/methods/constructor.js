@@ -1,5 +1,5 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
-import { attrProxy, dataProxy, runLifecycle } from './utils.js'
+import { attrProxy, dataProxy, attrObserver, runLifecycle } from './utils.js'
 import instanceFunctions from './functions.js'
 
 /**
@@ -32,6 +32,7 @@ function advanced (context, options) {
     tag: options.tag,
     id: instanceId,
     attributes: {},
+    observer: {},
     body: {},
     bodyContent: '',
     styleContent: '',
@@ -41,8 +42,8 @@ function advanced (context, options) {
     loaded: false,
     reactiveAttributes: options.attributes,
     instance: {
-      attr: options.reactive ? attrProxy(context, options, {}) : {},
-      data: options.reactive ? dataProxy(context, options, {}) : {},
+      attr: {},
+      data: {},
       func: instanceFunctions(context, options),
       self: {
         id: instanceId,
@@ -75,6 +76,23 @@ function advanced (context, options) {
       ready: null,
     },
     options: options
+  }
+
+  // Set mj-id attribute, if enabled
+  if (options.modjoolId) {
+    context.setAttribute('mj-id', context.mj.id)
+  }
+
+  // Create reactive features
+  if (options.reactive) {
+    // Create attr & data instance param proxies
+    context.mj.instance.attr = attrProxy(context, options, {})
+    context.mj.instance.data = dataProxy(context, options, {})
+
+    // Create attribute MutationObserver if reactive attr not set manually
+    if (!options.attr.length) {
+      context.mj.observer = attrObserver(context, options)
+    }
   }
 
   // Create shadow DOM, if enabled

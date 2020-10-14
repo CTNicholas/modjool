@@ -93,7 +93,7 @@ newElement({
 
 newElement({
   js: ({ data, self }) => {
-    self.html(({ slot, self }) => slot + self.id)
+    self.html(({ slot, self }) => slot)
   },
   html: ({ data }) => `❌ self.html() error`
 }, '✅ self.html() works')
@@ -142,6 +142,23 @@ newElement({
   html: ({ attr, data }) => `${data.result.length ? data.result : data.error}`
 }, '', { attr: {
     result: '❌ change attr proxy error'
+  }})
+
+newElement({
+  js: ({ attr, data, self }) => {
+    data.result = data.result ? data.result : '❌ attr MutationObserver lifecycle error'
+    if (attr.result.startsWith('❌')) {
+      attr.result = '✅ attr MutationObserver lifecycle works'
+    }
+  },
+  result: ({ attr, data, self, oldVal, newVal }) => {
+    if (oldVal.startsWith('❌') && newVal.startsWith('✅')) {
+      data.result = attr.result
+    }
+  },
+  html: ({ attr, data }) => `${data.result}`
+}, '', { attr: {
+    result: '❌ attr lifecycle error'
   }})
 
 
@@ -313,14 +330,14 @@ function newElement(initObject, content = '', { tag = nextTag(), attr = {} } = {
   }
   modjool.create({
     tag: tag,
-    attr: attrs,
+    // attr: attrs,
     shadowDom: false,
     ...initObject
   })
   const tag2 = nextTag()
   modjool.create({
     tag: tag2,
-    attr: attrs,
+    // attr: attrs,
     shadowDom: true,
     ...initObject
   })

@@ -1,4 +1,76 @@
 import { updateBody } from './update-body'
+import attributeChanged from './changed.js'
+
+/**
+ * Returns a new Proxy element, with a set proxy, attached to proxyObj
+ * When proxyObj's value changed, set value of this element's corresponding attribute
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ * @param {Object} proxyObj - The current attribute values
+ */
+function attrProxy (context, options, proxyObj = {}) {
+  return new Proxy(proxyObj, {
+    set (obj, prop, value) {
+      if (!context.mj.settingAttributes) {
+        context.setAttribute(prop, value)
+      }
+      return Reflect.set(...arguments)
+    }
+  })
+}
+
+/**
+ * Returns a new Proxy element, with a set proxy, attached to proxyObj
+ * When proxyObj's value changed, update the body, if not already updating
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ * @param {Object} proxyObj - The current attribute values
+ */
+function dataProxy (context, options, proxyObj = {}) {
+  return new Proxy(proxyObj, {
+    set (obj, prop, value) {
+      const result = Reflect.set(...arguments)
+      updateBody(context, options)
+      return result
+    }
+  })
+}
+
+/**
+ * Returns an observing MutationObserver that passes
+ * attributes changed to the default advanced element handler
+ * for attributeChangedCallback.
+ *
+ * MutationObserver only watches for attribute changes to the
+ * context element, and not changes to its children or other events.
+ *
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ * @returns {MutationObserver} - The observing MutationObserver
+ */
+function attrObserver (context, options) {
+  const observer = new MutationObserver(mutationList => {
+    mutationList.forEach(mutation => {
+      if (mutation.type === 'attributes') {
+        attributeChanged.advanced(context, options, {
+          attrName: mutation.attributeName,
+          oldVal: mutation.oldValue,
+          newVal: context.getAttribute(mutation.attributeName)
+        })
+      }
+    })
+  })
+
+  // Start observing
+  observer.observe(context, {
+    // Watch for attribute change
+    attributes: true,
+    // Save old values
+    attributeOldValue: true
+  })
+
+  return observer
+}
 
 /**
  * Runs the lifecycle event as specified by apiProp
@@ -32,39 +104,4 @@ function runLifecycle ({ mj }, options, apiProp, extra = false) {
   return result
 }
 
-/**
- * Returns a new Proxy element, with a set proxy, attached to proxyObj
- * When proxyObj's value changed, set value of this element's corresponding attribute
- * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
- * @param {Object} proxyObj - The current attribute values
- */
-function attrProxy (context, options, proxyObj = {}) {
-  return new Proxy(proxyObj, {
-    set (obj, prop, value) {
-      if (!context.settingAttributes) {
-        context.setAttribute(prop, value)
-        return Reflect.set(...arguments)
-      }
-    }
-  })
-}
-
-/**
- * Returns a new Proxy element, with a set proxy, attached to proxyObj
- * When proxyObj's value changed, update the body, if not already updating
- * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
- * @param {Object} proxyObj - The current attribute values
- */
-function dataProxy (context, options, proxyObj = {}) {
-  return new Proxy(proxyObj, {
-    set (obj, prop, value) {
-      const result = Reflect.set(...arguments)
-      updateBody(context, options)
-      return result
-    }
-  })
-}
-
-export { runLifecycle, attrProxy, dataProxy }
+export { attrProxy, dataProxy, attrObserver, runLifecycle }
