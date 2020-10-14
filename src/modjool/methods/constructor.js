@@ -1,6 +1,7 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
 import { attrProxy, dataProxy, attrObserver, runLifecycle } from './utils.js'
 import instanceFunctions from './functions.js'
+import keywords from '../config/keywords.js'
 
 /**
  * Initialises the custom element's mj property, builds shadow DOM,
@@ -62,6 +63,13 @@ function advanced (context, options) {
         js: js => updateNew(context, options, { js }),
         leave: leave => updateNew(context, options, { leave }),
         ready: ready => updateNew(context, options, { ready }),
+        attrHook: (attrName, func) => {
+          // If custom attribute set, and no custom attr observed, then create
+          if (!options.attr.length && !context.mj.observer) {
+            context.mj.observer = attrObserver(context, options)
+          }
+          updateNew(context, options, { [attrName]: func })
+        }
       },
       slot: {},
       slotVal: {}
@@ -90,7 +98,7 @@ function advanced (context, options) {
     context.mj.instance.data = dataProxy(context, options, {})
 
     // Create attribute MutationObserver if reactive attr not set manually
-    if (!options.attr.length) {
+    if (!options.attr.length && optionsContainsCustomHook(options)) {
       context.mj.observer = attrObserver(context, options)
     }
   }
@@ -105,7 +113,8 @@ function advanced (context, options) {
 
   // If shadow DOM, set self.element to the host (the element containing the shadow DOM)
   context.mj.instance.self.element = context.mj.body.host ? context.mj.body.host : context.mj.body
-  
+
+  // Constructor complete, run "enter" lifecycle
   context.mj.constructorRun = true
   runLifecycle(context, options, 'enter')
 }
@@ -113,3 +122,12 @@ function advanced (context, options) {
 function simple () {}
 
 export default { advanced, simple }
+
+function optionsContainsCustomHook (options) {
+  for (const option of Object.keys(options)) {
+    if (!keywords.includes(option)) {
+      return true
+    }
+  }
+  return false
+}
