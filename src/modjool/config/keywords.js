@@ -2,16 +2,19 @@
  * Blocked keywords, not allowed as custom HTML attributes
  */
 export default [
-  'html',
-  'js',
-  'css',
   'tag',
+  // 'attr',
   'shadowDom',
-  'attributes',
   'reactive',
+  'modjoolId',
+  'unhide',
+  'scopedCss',
   'enter',
-  'ready',
-  'leave',
   'data',
-  'modjoolId'
+  'ready',
+  'js',
+  'complete',
+  'leave',
+  'html',
+  'css',
 ]

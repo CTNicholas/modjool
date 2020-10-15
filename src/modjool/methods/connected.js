@@ -44,6 +44,7 @@ function advanced (context, options) {
       if (runLifecycle(context, options, 'js') !== null) {
         updateBody(context, options)
       }
+      runLifecycle(context, options, 'complete')
       state.addElement(context)
       context.dispatchEvent(new Event('mj-defined'))
     }

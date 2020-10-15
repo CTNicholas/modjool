@@ -23,6 +23,7 @@ function advanced (context, options, { attrName, oldVal, newVal }) {
     if (runLifecycle(...args, 'js') !== null) {
       updateBody(...args)
     }
+    runLifecycle(...args, 'complete')
   }
 }
 

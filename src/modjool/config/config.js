@@ -9,10 +9,11 @@ export default {
   scopedCss: true,
   unhide: false,
   reactive: true,
-  html: () => '',
-  css: () => '',
-  js: undefined,
   enter: undefined,
   ready: undefined,
-  leave: undefined
+  js: undefined,
+  complete: undefined,
+  leave: undefined,
+  html: () => '',
+  css: () => '',
 }

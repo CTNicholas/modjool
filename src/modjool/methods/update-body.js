@@ -4,9 +4,10 @@
  * return, and wait for it to finish.
  * @param {ModjoolElement} context - The custom element
  * @param {Object} options - The custom element's options
+ * @param {Boolean} ignoreLifecycle - Ignore running lifecycle and force update
  */
-function updateBody (context, options) {
-  if (context.isConnected && !context.mj.runningLifecycle) {
+function updateBody (context, options, ignoreLifecycle) {
+  if (context.isConnected && (!context.mj.runningLifecycle || ignoreLifecycle)) {
     const newHtml = getHtml(context, options)
     const newCss = getCss(context, options)
     const newBody = newHtml + newCss

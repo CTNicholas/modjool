@@ -11,6 +11,7 @@ function advanced (context, options) {
   if (runLifecycle(context, options, 'js', { adopted: true }) !== null) {
     updateBody(context, options)
   }
+  runLifecycle(context, options, 'complete')
 }
 
 function simple () { }

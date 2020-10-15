@@ -7,6 +7,7 @@ import { updateBody } from './update-body.js'
  * @param {...any} args
  * @param {ModjoolElement} args[0] - The custom element
  * @param {Object} args[1] - The custom element's options
+ * @param {Boolean} args[2] - Ignore running lifecycle and force update
  */
 function updateAll (...args) {
   updateAttributes(...args)
