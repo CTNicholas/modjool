@@ -3,7 +3,7 @@ import { updateBody, updateAttributes } from './update.js'
 
 /**
  * Gets current attributes, runs attribute lifecycle function, and updates body
- * If js() is defined, and element has loaded, runs js (), and updates body again
+ * Runs complete lifecycle function afterwards
  * 
  * Runs when attributeChangedCallback is called, and an observed attribute is changed
  * 
@@ -20,9 +20,6 @@ function advanced (context, options, { attrName, oldVal, newVal }) {
     updateAttributes(...args)
     runLifecycle(...args, attrName, { oldVal, newVal })
     updateBody(...args)
-    if (runLifecycle(...args, 'js') !== null) {
-      updateBody(...args)
-    }
     runLifecycle(...args, 'complete')
   }
 }

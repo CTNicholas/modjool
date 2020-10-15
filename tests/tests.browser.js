@@ -79,6 +79,40 @@ newElement({
   html: ({ data }) => `${data.text}`
 })
 
+newElement({
+  js: ({ data }) => data.text = '✅ complete() works',
+  complete: ({ data }) => {
+    console.log('PLS', data.text)
+    data.text = '❌ complete() error'
+  },
+  html: ({ data }) => `${data.text}`
+})
+
+newElement({
+  js: ({ data }) => data.text = '❌ force complete() update error' ,
+  complete: ({ data, self }) => {
+    data.text = '✅ force complete() update works'
+    self.update()
+  },
+  html: ({ data }) => `${data.text}`
+})
+
+newElement({
+  data: () => ({ count: 0 }),
+  js: ({ data, elem, self }) => {
+    elem.onclick = () => false
+    data.count++
+    setTimeout(() => {
+      data.listen = elem.onclick()
+    })
+  },
+  complete: ({ data, elem }) => {
+    data.count++
+    elem.onclick = () => true
+  },
+  html: ({ data }) => `${data.listen && data.count === 3 ? '✅ complete() listener works' : '❌ complete() listener error'}`
+})
+
 /* === Self tests ==================================================== */
 let selfUpdateTest = '❌ self.update() error'
 newElement({

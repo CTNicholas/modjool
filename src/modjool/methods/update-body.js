@@ -6,7 +6,7 @@
  * @param {Object} options - The custom element's options
  * @param {Boolean} ignoreLifecycle - Ignore running lifecycle and force update
  */
-function updateBody (context, options, ignoreLifecycle) {
+function updateBody (context, options, ignoreLifecycle = false) {
   if (context.isConnected && (!context.mj.runningLifecycle || ignoreLifecycle)) {
     const newHtml = getHtml(context, options)
     const newCss = getCss(context, options)

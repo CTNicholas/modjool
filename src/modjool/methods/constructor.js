@@ -62,6 +62,7 @@ function advanced (context, options) {
         enter: enter => updateNew(context, options, { enter }),
         html: html => updateNew(context, options, { html }),
         js: js => updateNew(context, options, { js }),
+        complete: complete => updateNew(context, options, { complete }),
         leave: leave => updateNew(context, options, { leave }),
         ready: ready => updateNew(context, options, { ready }),
         attrHook: (attrName, func) => {

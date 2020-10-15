@@ -21,7 +21,9 @@ function attrProxy (context, options, proxyObj = {}) {
 
 /**
  * Returns a new Proxy element, with a set proxy, attached to proxyObj
- * When proxyObj's value changed, update the body, if not already updating
+ * When proxyObj's value changed, if not running lifecycle:
+ *  - Update the body
+ *  - Run complete() lifecycle event
  * @param {ModjoolElement} context - The custom element
  * @param {Object} options - The custom element's options
  * @param {Object} proxyObj - The current attribute values
@@ -30,7 +32,10 @@ function dataProxy (context, options, proxyObj = {}) {
   return new Proxy(proxyObj, {
     set (obj, prop, value) {
       const result = Reflect.set(...arguments)
-      updateBody(context, options)
+      if (!context.mj.runningLifecycle) {
+        updateBody(context, options)
+        runLifecycle(context, options, 'complete')
+      }
       return result
     }
   })

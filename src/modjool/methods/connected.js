@@ -8,11 +8,11 @@ import { updateBody, updateSlots, updateAttributes } from './update.js'
  * 
  * Execution process:
  *   1. Wait for parents to be defined
- *   2. Set mj-id
- *   3. Get attributes, slots, data
- *   4. Run ready() lifecycle event, and update body (get html() and css())
- *   5. Unhide element if enabled, context.mj.loaded = true
- *   6. If js() used, run js() lifecycle event if given, then update body again
+ *   2. Get attributes, slots, data
+ *   3. Run ready() lifecycle event, and update body (get html() and css())
+ *   4. Unhide element if enabled, context.mj.loaded = true
+ *   5. If js() used, run js() lifecycle event if given, then update body again
+ *   6. Run complete() lifecycle event
  *   7. Add to defined elements, and dispatch mj-defined custom event
  * 
  * @param {ModjoolElement} context - The custom element
@@ -31,7 +31,6 @@ function advanced (context, options) {
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML
-      //initPrivateId(...args)
       updateAttributes(...args)
       updateSlots(...args)
       setData(...args, context.mj.new.data || runLifecycle(context, options, 'data') || {})
@@ -119,17 +118,6 @@ function waitForParentElements (context, func) {
         console.error(err)
       }
     }
-  }
-}
-
-/**
- * If options.id is true, set mj-id attribute to context.mj.id value
- * @param {ModjoolElement} context 
- * @param {Object} options 
- */
-function initPrivateId (context, options) {
-  if (options.modjoolId) {
-    context.setAttribute('mj-id', context.mj.id)
   }
 }
 
