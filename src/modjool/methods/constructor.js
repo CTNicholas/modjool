@@ -1,5 +1,5 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
-import { attrProxy, dataProxy, attrObserver, runLifecycle } from './utils.js'
+import { attrProxy, dataProxy, attrObserver, runLifecycle, findFunction } from './utils.js'
 import instanceFunctions from './functions.js'
 import keywords from '../config/keywords.js'
 
@@ -45,11 +45,14 @@ function advanced (context, options) {
     instance: {
       attr: {},
       data: {},
-      func: instanceFunctions(context, options),
       elem: {},
+      find: findFunction(context, options),
+      findAll: findFunction(context, options, true),
+      func: instanceFunctions(context, options),
       self: {
         id: instanceId,
         tag: options.tag,
+        options: options,
         select: selector,
         element: {},
         update: () => updateBody(context, options, true),

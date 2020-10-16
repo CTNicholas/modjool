@@ -52,6 +52,7 @@ newElement({
 })
 
 
+
 /* === Lifecycle tests ==================================================== */
 newElement({
   js: ({ data }) => { data.text = '✅ js() and data works'},
@@ -112,6 +113,8 @@ newElement({
   },
   html: ({ data }) => `${data.listen && data.count === 3 ? '✅ complete() listener works' : '❌ complete() listener error'}`
 })
+
+
 
 /* === Self tests ==================================================== */
 let selfUpdateTest = '❌ self.update() error'
@@ -255,6 +258,33 @@ newElement({
 
 
 /* === Nesting ==================================================== */
+newElement({
+  js: ({ data, elem, find, self }) => {
+    if (self.options.shadowDom === false && find`span` === elem.querySelector('span')) {
+      data.text = '✅ find querySelector works'
+    }
+    if (self.options.shadowDom === true && find`span` === elem.shadowRoot.querySelector('span')) {
+      data.text = '✅ find querySelector works'
+    }
+  },
+  html: ({ data, slot }) => `<span></span>${data.text || slot}`
+}, '❌ find querySelector error')
+
+newElement({
+  js: ({ data, elem, findAll, self }) => {
+    if (self.options.shadowDom === false && findAll`span`.length === elem.querySelectorAll('span').length) {
+      data.text = '✅ findAll querySelectorAll works'
+    }
+    if (self.options.shadowDom === true && findAll`span`.length === elem.shadowRoot.querySelectorAll('span').length) {
+      data.text = '✅ findAll querySelectorAll works'
+    }
+  },
+  html: ({ data, slot }) => `<span></span><span></span>${data.text || slot}`
+}, '❌ find querySelector error')
+
+
+
+/* === Nesting ==================================================== */
 modjool.create({
   tag: 'nest-test-1',
   html: () => `✅ init before nesting works`
@@ -301,6 +331,7 @@ modjool.create({
 })
 
 
+
 /* === Console tests ==================================================== */
 newElement({
   html: () => `Check console for more tests`
@@ -343,6 +374,7 @@ newElement({
 }, '')
 
 
+
 /* === Method tests ==================================================== */
 modjool.wait().then(() => {
   const notDef1 = document.querySelectorAll(':not(:defined)')
@@ -362,6 +394,7 @@ modjool.getAsync('a-1').then(a => {
     console.log('❌ getAsync() and get() error')
   }
 })
+
 
 
 /* === Setup ==================================================== */

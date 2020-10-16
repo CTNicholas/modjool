@@ -109,4 +109,27 @@ function runLifecycle ({ mj }, options, apiProp, extra = false) {
   return result
 }
 
-export { attrProxy, dataProxy, attrObserver, runLifecycle }
+/**
+ * Returns a shortcut function for context.querySelector, compatible with
+ * tagged template literals, and regular strings.
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ * @param {Boolean} findAll - Optional, return querySelectorAll
+ * @returns {function(String|Array, ...[String]): *}
+ */
+function findFunction (context, options, findAll = false) {
+  return function (strings, ...values) {
+    let str
+    if (typeof strings === 'string' || strings instanceof String) {
+      str = strings
+    } else {
+      str = strings[0]
+      for (let i = 0; i < values.length; i++) {
+        str += values[i] + strings[i+1]
+      }
+    }
+    return findAll ? context.mj.body.querySelectorAll(str) : context.mj.body.querySelector(str)
+  }
+}
+
+export { attrProxy, dataProxy, attrObserver, runLifecycle, findFunction }
