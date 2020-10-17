@@ -1,5 +1,6 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
-import { attrProxy, dataProxy, attrObserver, runLifecycle, findFunction } from './utils.js'
+import { attrObserver, attrProxy, dataProxy } from './proxies'
+import { runLifecycle, findFunction } from './utils.js'
 import instanceFunctions from './functions.js'
 import keywords from '../config/keywords.js'
 

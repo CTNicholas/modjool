@@ -44,8 +44,9 @@ function getSlotContent (context, options) {
 
   } else {
     // Single slot
+    const shadowSlot = context.mj.bodyContent.length ? '<slot></slot>' : ''
     slotVal = context.mj.bodyContent
-    slot = options.shadowDom ? '<slot></slot>' : context.mj.bodyContent
+    slot = options.shadowDom ? shadowSlot : context.mj.bodyContent
   }
   return { slot, slotVal }
 }

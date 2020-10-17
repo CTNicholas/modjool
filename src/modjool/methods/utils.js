@@ -1,82 +1,3 @@
-import { updateBody } from './update-body'
-import attributeChanged from './changed.js'
-
-/**
- * Returns a new Proxy element, with a set proxy, attached to proxyObj
- * When proxyObj's value changed, set value of this element's corresponding attribute
- * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
- * @param {Object} proxyObj - The current attribute values
- */
-function attrProxy (context, options, proxyObj = {}) {
-  return new Proxy(proxyObj, {
-    set (obj, prop, value) {
-      if (!context.mj.settingAttributes) {
-        context.setAttribute(prop, value)
-      }
-      return Reflect.set(...arguments)
-    }
-  })
-}
-
-/**
- * Returns a new Proxy element, with a set proxy, attached to proxyObj
- * When proxyObj's value changed, if not running lifecycle:
- *  - Update the body
- *  - Run complete() lifecycle event
- * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
- * @param {Object} proxyObj - The current attribute values
- */
-function dataProxy (context, options, proxyObj = {}) {
-  return new Proxy(proxyObj, {
-    set (obj, prop, value) {
-      const result = Reflect.set(...arguments)
-      if (!context.mj.runningLifecycle) {
-        updateBody(context, options)
-        runLifecycle(context, options, 'complete')
-      }
-      return result
-    }
-  })
-}
-
-/**
- * Returns an observing MutationObserver that passes
- * attributes changed to the default advanced element handler
- * for attributeChangedCallback.
- *
- * MutationObserver only watches for attribute changes to the
- * context element, and not changes to its children or other events.
- *
- * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
- * @returns {MutationObserver} - The observing MutationObserver
- */
-function attrObserver (context, options) {
-  const observer = new MutationObserver(mutationList => {
-    mutationList.forEach(mutation => {
-      if (mutation.type === 'attributes') {
-        attributeChanged.advanced(context, options, {
-          attrName: mutation.attributeName,
-          oldVal: mutation.oldValue,
-          newVal: context.getAttribute(mutation.attributeName)
-        })
-      }
-    })
-  })
-
-  // Start observing
-  observer.observe(context, {
-    // Watch for attribute change
-    attributes: true,
-    // Save old values
-    attributeOldValue: true
-  })
-
-  return observer
-}
-
 /**
  * Runs the lifecycle event as specified by apiProp
  * Execution process:
@@ -132,4 +53,81 @@ function findFunction (context, options, findAll = false) {
   }
 }
 
-export { attrProxy, dataProxy, attrObserver, runLifecycle, findFunction }
+/**
+ * Converts kebab-case to camelCase
+ * Uses a cache for speed
+ * @type {function(*): *}
+ * @param {String} - String to convert
+ * @returns {String} - Converted string
+ */
+const kebabToCamel = kebabCamelCache()
+
+/**
+ * Converts camelCase to kebab-case
+ * Uses a cache for speed
+ * @type {function(*): *}
+ * @param {String} - String to convert
+ * @returns {String} - Converted string
+ */
+const camelToKebab = kebabCamelCache(true)
+
+export { runLifecycle, findFunction, kebabToCamel, camelToKebab }
+
+/**
+ * Creates a cache of kebal-case to camelCase conversions, and vice-versa
+ * Returns two functions, one for conversion either way, returning
+ * from cache if already converted
+ * @param {Boolean} camelToKebab - If true, convert FROM camel, instead of TO
+ * @returns {function(*): (*)} -
+ */
+function kebabCamelCache (camelToKebab = false) {
+  const camelCache = {}
+  const kebabCache = {}
+
+  if (camelToKebab) {
+    // camelCase to kebab-case
+    return function (str) {
+      // Check cache
+      if (camelCache[str]) {
+        return camelCache[str]
+      }
+
+      // Return str if not camelCase (has any capital letters)
+      if (str === str.toLowerCase()) {
+        return str
+      }
+
+      // Convert, add to cache, return
+      const result = str.replace(/[A-Z]/g, "-$&").toLowerCase()
+      camelCache[str] = result
+      kebabCache[result] = str
+      return result
+    }
+  }
+
+  // kebab-case to camelCase
+  // (quicker than regex in every browser but Firefox)
+  return function (str) {
+    // Check cache
+    if (kebabCache[str]) {
+      return kebabCache[str]
+    }
+
+    // Return str if not kebab case (has any hyphens)
+    if (!str.includes('-')) {
+      return str
+    }
+
+    // Convert, add to cache, return
+    const result = str
+      .split('-')
+      .map((item, index) =>
+        index
+          ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+          : item.toLowerCase())
+      .join("")
+    kebabCache[str] = result
+    camelCache[result] = str
+    return result
+  }
+}

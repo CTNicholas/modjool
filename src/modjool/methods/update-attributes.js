@@ -1,4 +1,4 @@
-import { attrProxy } from './utils.js'
+import { kebabToCamel } from './utils.js'
 
 /**
  * If element connected, retrieve and set attributes
@@ -17,7 +17,7 @@ function updateAttributes (context, options) {
         if (val === '') {
           val = true
         }
-        context.mj.attributes[prop] = val
+        context.mj.attributes[kebabToCamel(prop)] = val
       }
     }
     setAttr(context, options, context.mj.attributes)
