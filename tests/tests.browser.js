@@ -81,9 +81,18 @@ newElement({
 })
 
 newElement({
+  data: ({ data }) => ({ importantTest: '❌' }),
+  ready: ({ data }) => { data.importantTest += ' data hook error' },
+  dataImportantTest: ({ data, oldVal, newVal }) => {
+    const success = oldVal === '❌' && newVal.endsWith('error')
+    return success ? '✅ data hook works' : newVal
+  },
+  html: ({ data }) => `${data.importantTest}`
+})
+
+newElement({
   js: ({ data }) => data.text = '✅ complete() works',
   complete: ({ data }) => {
-    console.log('PLS', data.text)
     data.text = '❌ complete() error'
   },
   html: ({ data }) => `${data.text}`
@@ -107,13 +116,25 @@ newElement({
       data.listen = elem.onclick()
     })
   },
-  complete: ({ data, elem }) => {
+  complete: ({ data, elem, self }) => {
     data.count++
     elem.onclick = () => true
   },
-  html: ({ data }) => `${data.listen && data.count === 3 ? '✅ complete() listener works' : '❌ complete() listener error'}`
+  html: ({ data }) => `${data.listen && data.count === 2 ? '✅ complete() listener works' : '❌ complete() listener error'}`
 })
 
+/*
+Can never work, MutationObserver is async, can't tell if lifecycle running or not
+newElement({
+  complete: ({ attr, elem, self }) => {
+    attr.text = '❌ attr non-reactivity complete() error'
+  },
+  html: ({ attr }) => `${attr.text}`
+}, '', { attr: {
+    text: '✅ attr non-reactivity complete() works'
+  }
+})
+*/
 
 
 /* === Self tests ==================================================== */
@@ -181,6 +202,20 @@ newElement({
   }})
 
 newElement({
+  data: () => ({ result: 0 }),
+  js: ({ self }) => {
+    self.element.setAttribute('result', '1')
+    self.element.setAttribute('result-two', '2')
+  },
+  attrResult: ({ data }) => { data.result++ },
+  attrResultTwo: ({ data }) => { data.result++ },
+  html: ({ data }) => `${data.result === 2 ? '✅ attrHook works' : '❌ attrHook error'}`
+}, '', { attr: {
+    result: 'one',
+    ['result-two']: 'two'
+  }})
+
+newElement({
   attr: ['result'],
   ready: ({ attr, data, self }) => {
     data.error = attr.result
@@ -199,7 +234,7 @@ newElement({
       attr.result = '✅ attr MutationObserver lifecycle works'
     }
   },
-  result: ({ attr, data, self, oldVal, newVal }) => {
+  attrResult: ({ attr, data, self, oldVal, newVal }) => {
     if (oldVal.startsWith('❌') && newVal.startsWith('✅')) {
       data.result = attr.result
     }
@@ -208,6 +243,22 @@ newElement({
 }, '', { attr: {
     result: '❌ attr lifecycle error'
   }})
+
+newElement({
+  html: ({ attr }) => `${attr.kebabCase || '❌ kebab to camel attr error'}`
+}, '', { attr: {
+    ['kebab-case']: '✅ kebab to camel attr works'
+  }})
+
+newElement({
+  js: ({ attr, data, elem }) => {
+    attr.camelCase = 'potato'
+    if (elem.getAttribute('camel-case') === 'potato') {
+      data.res = '✅ camel to kebab attr works'
+    }
+  },
+  html: ({ attr, data }) => `${data.res || '❌ camel to kebab attr error'}`
+}, '')
 
 
 
@@ -255,9 +306,16 @@ newElement({
 <span slot="one"></slot><span slot="two">❌ nested slot error</slot>
 </slot-nest-test-1>`)
 
+newElement({
+  js: ({ data, slot, slotVal }) =>  {
+    data.result = slot === '' && slotVal === ''
+  },
+  html: ({ data }) => data.result ? '✅ empty slot works' : '❌ empty slot error'
+})
 
 
-/* === Nesting ==================================================== */
+
+/* === Find ==================================================== */
 newElement({
   js: ({ data, elem, find, self }) => {
     if (self.options.shadowDom === false && find`span` === elem.querySelector('span')) {

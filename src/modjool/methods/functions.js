@@ -43,7 +43,7 @@ export default function (context, options) {
     // Converts 'list' to array
     /**
      * Takes a list and convert it to an array
-     * @param {String} list - A comma seperated list
+     * @param {String} list - A comma separated list
      * @returns {Array} - Converted list
      */
     array (list) {
@@ -56,9 +56,9 @@ export default function (context, options) {
     },
 
     /**
-     * Takes a comma seperated list, comverts to array, runs function on each
+     * Takes a comma separated list, converts to array, runs function on each
      * Add all functions results together, and returns
-     * @param {String} list - A comma seperated list
+     * @param {String} list - A comma separated list
      * @param {Function} func - Function to be run
      * @returns {String} - Result of function, joined
      */

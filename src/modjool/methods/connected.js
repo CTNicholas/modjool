@@ -76,9 +76,11 @@ function setData (context, options, data) {
     return null
   }
 
+  context.mj.dataInit = true
   for (const [prop, val] of Object.entries(data)) {
     context.mj.instance.data[prop] = val
   }
+  context.mj.dataInit = false
 }
 
 /**

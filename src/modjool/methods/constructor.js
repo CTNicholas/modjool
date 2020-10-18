@@ -1,6 +1,6 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
 import { attrObserver, attrProxy, dataProxy } from './proxies'
-import { runLifecycle, findFunction } from './utils.js'
+import { runLifecycle, findFunction, capitalise } from './utils.js'
 import instanceFunctions from './functions.js'
 import keywords from '../config/keywords.js'
 
@@ -56,10 +56,20 @@ function advanced (context, options) {
         options: options,
         select: selector,
         element: {},
-        update: () => updateBody(context, options, true),
+        update: () => {
+          updateBody(context, options, true)
+          if (!context.mj.runningLifecycle) {
+            runLifecycle(context, options, 'complete')
+          }
+        },
         updateSlot: () => updateSlots(context, options),
         updateAttr: () => updateAttributes(context, options),
-        updateAll: () => updateAll(context, options, true),
+        updateAll: () => {
+          updateAll(context, options, true)
+          if (!context.mj.runningLifecycle) {
+            runLifecycle(context, options, 'complete')
+          }
+        },
         remove: () => context.mj.body.host ? context.mj.body.host.remove() : context.mj.body.remove(),
         css: css => updateNew(context, options, { css }),
         data: data => updateNew(context, options, { data }),
@@ -74,7 +84,10 @@ function advanced (context, options) {
           if (!options.attr.length && !context.mj.observer) {
             context.mj.observer = attrObserver(context, options)
           }
-          updateNew(context, options, { [attrName]: func })
+          updateNew(context, options, { ['attr' + capitalise(attrName)]: func })
+        },
+        dataHook: (dataName, func) => {
+          updateNew(context, options, { ['data' + capitalise(dataName)]: func })
         }
       },
       slot: {},

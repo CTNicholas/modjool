@@ -14,19 +14,26 @@
  */
 function runLifecycle ({ mj }, options, apiProp, extra = false) {
   let result = null
-  mj.runningLifecycle = true
+  let alreadyRunningLifecycle = false
+  if (mj.runningLifecycle) {
+    alreadyRunningLifecycle = true
+  } else {
+    mj.runningLifecycle = true
+  }
 
   // If new replacement lifecycle event has been set, run it
   if (mj.new && mj.new[apiProp] !== null && mj.new[apiProp] !== undefined) {
-    result = mj.new[apiProp]() || {}
+    result = mj.new[apiProp]() || undefined
   }
 
   // Run regular lifecycle, add extra options if needed
   if (result === null && options[apiProp] !== undefined) {
-    result = (extra ? options[apiProp]({ ...mj.instance, ...extra }) : options[apiProp](mj.instance)) || {}
+    result = (extra ? options[apiProp]({ ...mj.instance, ...extra }) : options[apiProp](mj.instance)) || undefined
   }
 
-  mj.runningLifecycle = false
+  if (!alreadyRunningLifecycle) {
+    mj.runningLifecycle = false
+  }
   return result
 }
 
@@ -44,13 +51,23 @@ function findFunction (context, options, findAll = false) {
     if (typeof strings === 'string' || strings instanceof String) {
       str = strings
     } else {
+      // Build template string
       str = strings[0]
       for (let i = 0; i < values.length; i++) {
-        str += values[i] + strings[i+1]
+        str += values[i] + strings[i + 1]
       }
     }
     return findAll ? context.mj.body.querySelectorAll(str) : context.mj.body.querySelector(str)
   }
+}
+
+/**
+ * Capitalise first character
+ * @param {String} str - String to capitalise
+ * @returns {String} - Capitalised string
+ */
+function capitalise (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 /**
@@ -71,10 +88,10 @@ const kebabToCamel = kebabCamelCache()
  */
 const camelToKebab = kebabCamelCache(true)
 
-export { runLifecycle, findFunction, kebabToCamel, camelToKebab }
+export { runLifecycle, findFunction, capitalise, kebabToCamel, camelToKebab }
 
 /**
- * Creates a cache of kebal-case to camelCase conversions, and vice-versa
+ * Creates a cache of kebab-case to camelCase conversions, and vice-versa
  * Returns two functions, one for conversion either way, returning
  * from cache if already converted
  * @param {Boolean} camelToKebab - If true, convert FROM camel, instead of TO

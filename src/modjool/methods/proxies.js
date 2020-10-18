@@ -1,6 +1,7 @@
 import { updateBody } from './update-body.js'
-import { camelToKebab, runLifecycle } from './utils.js'
+import { capitalise, camelToKebab, kebabToCamel, runLifecycle } from './utils.js'
 import attributeChanged from './changed.js'
+import { updateAttributes } from './update-attributes'
 
 /**
  * Returns a new Proxy element, with a set proxy, attached to proxyObj
@@ -23,6 +24,8 @@ function attrProxy (context, options, proxyObj = {}) {
 /**
  * Returns a new Proxy element, with a set proxy, attached to proxyObj
  * When proxyObj's value changed, if not running lifecycle:
+ *  - Get result of dataDataNameHook
+ *  - Set if value returned, otherwise use value
  *  - Update the body
  *  - Run complete() lifecycle event
  * @param {ModjoolElement} context - The custom element
@@ -32,7 +35,22 @@ function attrProxy (context, options, proxyObj = {}) {
 function dataProxy (context, options, proxyObj = {}) {
   return new Proxy(proxyObj, {
     set (obj, prop, value) {
-      const result = Reflect.set(...arguments)
+      if (context.mj.dataInit) {
+        return Reflect.set(...arguments)
+      }
+      //console.log(obj[prop])
+      const dataHookVal = runLifecycle(context, options, 'data' + capitalise(prop), {
+        oldVal: obj[prop],
+        newVal: value
+      })
+
+      let result
+      if (dataHookVal) {
+        result = Reflect.set(obj, prop, dataHookVal)
+      } else {
+        result = Reflect.set(...arguments)
+      }
+
       if (!context.mj.runningLifecycle) {
         updateBody(context, options)
         runLifecycle(context, options, 'complete')
@@ -50,6 +68,9 @@ function dataProxy (context, options, proxyObj = {}) {
  * MutationObserver only watches for attribute changes to the
  * context element, and not changes to its children or other events.
  *
+ * Limitation: MutationObserver is async; reactive attributes still called
+ * within complete() due do this.
+ *
  * @param {ModjoolElement} context - The custom element
  * @param {Object} options - The custom element's options
  * @returns {MutationObserver} - The observing MutationObserver
@@ -57,7 +78,7 @@ function dataProxy (context, options, proxyObj = {}) {
 function attrObserver (context, options) {
   const observer = new MutationObserver(mutationList => {
     mutationList.forEach(mutation => {
-      if (mutation.type === 'attributes') {
+      if (mutation.type === 'attributes' && context.mj.loaded) {
         attributeChanged.advanced(context, options, {
           attrName: mutation.attributeName,
           oldVal: mutation.oldValue,
