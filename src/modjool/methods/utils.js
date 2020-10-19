@@ -62,15 +62,6 @@ function findFunction (context, options, findAll = false) {
 }
 
 /**
- * Capitalise first character
- * @param {String} str - String to capitalise
- * @returns {String} - Capitalised string
- */
-function capitalise (str) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
-/**
  * Converts kebab-case to camelCase
  * Uses a cache for speed
  * @type {function(*): *}
@@ -88,7 +79,7 @@ const kebabToCamel = kebabCamelCache()
  */
 const camelToKebab = kebabCamelCache(true)
 
-export { runLifecycle, findFunction, capitalise, kebabToCamel, camelToKebab }
+export { runLifecycle, findFunction, kebabToCamel, camelToKebab }
 
 /**
  * Creates a cache of kebab-case to camelCase conversions, and vice-versa

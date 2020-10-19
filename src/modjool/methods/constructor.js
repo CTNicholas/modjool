@@ -1,6 +1,6 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
 import { attrObserver, attrProxy, dataProxy } from './proxies'
-import { runLifecycle, findFunction, capitalise } from './utils.js'
+import { runLifecycle, findFunction } from './utils.js'
 import instanceFunctions from './functions.js'
 import keywords from '../config/keywords.js'
 
@@ -84,10 +84,10 @@ function advanced (context, options) {
           if (!options.attr.length && !context.mj.observer) {
             context.mj.observer = attrObserver(context, options)
           }
-          updateNew(context, options, { ['attr' + capitalise(attrName)]: func })
+          updateNew(context, options, { ['attr_' + attrName]: func })
         },
         dataHook: (dataName, func) => {
-          updateNew(context, options, { ['data' + capitalise(dataName)]: func })
+          updateNew(context, options, { ['data_' + dataName]: func })
         }
       },
       slot: {},

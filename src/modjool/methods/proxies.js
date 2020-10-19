@@ -1,7 +1,6 @@
 import { updateBody } from './update-body.js'
-import { capitalise, camelToKebab, kebabToCamel, runLifecycle } from './utils.js'
+import { camelToKebab, runLifecycle } from './utils.js'
 import attributeChanged from './changed.js'
-import { updateAttributes } from './update-attributes'
 
 /**
  * Returns a new Proxy element, with a set proxy, attached to proxyObj
@@ -39,7 +38,7 @@ function dataProxy (context, options, proxyObj = {}) {
         return Reflect.set(...arguments)
       }
       //console.log(obj[prop])
-      const dataHookVal = runLifecycle(context, options, 'data' + capitalise(prop), {
+      const dataHookVal = runLifecycle(context, options, 'data_' + prop, {
         oldVal: obj[prop],
         newVal: value
       })

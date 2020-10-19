@@ -1,4 +1,4 @@
-import { runLifecycle, capitalise, kebabToCamel } from './utils.js'
+import { runLifecycle, kebabToCamel } from './utils.js'
 import { updateBody, updateAttributes } from './update.js'
 
 /**
@@ -17,7 +17,7 @@ import { updateBody, updateAttributes } from './update.js'
 function advanced (context, options, { attrName, oldVal, newVal }) {
   const args = [context, options]
   if (context.mj.loaded && oldVal !== newVal) {
-    const lifecycleName = 'attr' + capitalise(kebabToCamel(attrName))
+    const lifecycleName = 'attr_' + kebabToCamel(attrName)
     updateAttributes(...args)
     runLifecycle(...args, lifecycleName, { oldVal, newVal })
     if (!context.mj.runningLifecycle) {
