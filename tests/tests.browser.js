@@ -83,7 +83,7 @@ newElement({
 newElement({
   data: ({ data }) => ({ importantTest: '❌' }),
   ready: ({ data }) => { data.importantTest += ' data hook error' },
-  dataImportantTest: ({ data, oldVal, newVal }) => {
+  data_importantTest: ({ data, oldVal, newVal }) => {
     const success = oldVal === '❌' && newVal.endsWith('error')
     return success ? '✅ data hook works' : newVal
   },
@@ -207,8 +207,8 @@ newElement({
     self.element.setAttribute('result', '1')
     self.element.setAttribute('result-two', '2')
   },
-  attrResult: ({ data }) => { data.result++ },
-  attrResultTwo: ({ data }) => { data.result++ },
+  attr_result: ({ data }) => { data.result++ },
+  attr_resultTwo: ({ data }) => { data.result++ },
   html: ({ data }) => `${data.result === 2 ? '✅ attrHook works' : '❌ attrHook error'}`
 }, '', { attr: {
     result: 'one',
@@ -234,7 +234,7 @@ newElement({
       attr.result = '✅ attr MutationObserver lifecycle works'
     }
   },
-  attrResult: ({ attr, data, self, oldVal, newVal }) => {
+  attr_result: ({ attr, data, self, oldVal, newVal }) => {
     if (oldVal.startsWith('❌') && newVal.startsWith('✅')) {
       data.result = attr.result
     }
