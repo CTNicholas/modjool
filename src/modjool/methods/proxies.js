@@ -37,14 +37,15 @@ function dataProxy (context, options, proxyObj = {}) {
       if (context.mj.dataInit) {
         return Reflect.set(...arguments)
       }
-      //console.log(obj[prop])
       const dataHookVal = runLifecycle(context, options, 'data_' + prop, {
         oldVal: obj[prop],
         newVal: value
       })
 
       let result
-      if (dataHookVal) {
+
+      // Only sets if not null or undefined
+      if (dataHookVal != null) {
         result = Reflect.set(obj, prop, dataHookVal)
       } else {
         result = Reflect.set(...arguments)

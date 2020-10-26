@@ -39,10 +39,11 @@ function advanced (context, options) {
       
       unhideElement(...args)
       context.mj.loaded = true
-      
-      if (runLifecycle(context, options, 'js') !== null) {
-        updateBody(context, options)
-      }
+
+      runLifecycle(context, options, 'js')
+      runReactiveHooks(context, options)
+      updateBody(context, options)
+
       runLifecycle(context, options, 'complete')
       state.addElement(context)
       context.dispatchEvent(new Event('mj-defined'))
@@ -64,6 +65,50 @@ function simple (context, options) {
 }
 
 export default { advanced, simple }
+
+/**
+ * Runs all attr_[name] and data_[prop] functions, in that order
+ * Updates data properties if value returned
+ * @param {ModjoolElement} context - the custom element to update
+ * @param {Object} options - The custom element's options
+ */
+function runReactiveHooks (context, options) {
+  if (context.mj.instance) {
+    context.mj.runningLifecycle = true
+    runAttr()
+    runData()
+    context.mj.runningLifecycle = false
+  }
+
+  // Iterate through attributes, run lifecycle for each
+  function runAttr () {
+    for (let name in context.mj.attributes) {
+      const lifecycleName = 'attr_' + name
+      const attrValue = context.mj.attributes[name]
+      runLifecycle(context, options, lifecycleName, {
+        newVal: attrValue
+      })
+    }
+  }
+
+  // Iterate through data properties, run lifecycle for each, set new value
+  function runData () {
+    context.mj.dataInit = true
+    for (let prop in context.mj.instance.data) {
+      const lifecycleName = 'data_' + prop
+      const dataValue = context.mj.instance.data[prop]
+      const dataHookVal  = runLifecycle(context, options, lifecycleName, {
+        newVal: dataValue
+      })
+
+      // Only sets if not null or undefined
+      if (dataHookVal != null) {
+        context.mj.instance.data[prop] = dataHookVal
+      }
+    }
+    context.mj.dataInit = false
+  }
+}
 
 /**
  * Iterates through data and sets the same values to mj.instance.data

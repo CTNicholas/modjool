@@ -14,7 +14,7 @@ import { updateBody, updateAttributes } from './update.js'
  * @param {String} attr.oldVal - Old attribute value
  * @param {String} attr.newVal - New attribute value
  */
-function advanced (context, options, { attrName, oldVal, newVal }) {
+function advanced (context, options, { attrName, oldVal = '', newVal = '' }) {
   const args = [context, options]
   if (context.mj.loaded && oldVal !== newVal) {
     const lifecycleName = 'attr_' + kebabToCamel(attrName)

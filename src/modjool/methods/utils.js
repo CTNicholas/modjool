@@ -14,10 +14,10 @@
  */
 function runLifecycle ({ mj }, options, apiProp, extra = false) {
   let result = null
-  let alreadyRunningLifecycle = false
-  if (mj.runningLifecycle) {
-    alreadyRunningLifecycle = true
-  } else {
+  let alreadyRunningLifecycle = mj.runningLifecycle
+
+  // If not running during lifecycle, change state
+  if (!alreadyRunningLifecycle) {
     mj.runningLifecycle = true
   }
 
@@ -31,9 +31,11 @@ function runLifecycle ({ mj }, options, apiProp, extra = false) {
     result = (extra ? options[apiProp]({ ...mj.instance, ...extra }) : options[apiProp](mj.instance)) || undefined
   }
 
+  // If lifecycle started in this function, complete lifecycle
   if (!alreadyRunningLifecycle) {
     mj.runningLifecycle = false
   }
+
   return result
 }
 
