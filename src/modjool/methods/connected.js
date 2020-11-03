@@ -24,13 +24,13 @@ function advanced (context, options) {
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
 
-    whenReady(() => {
+    //whenReady(() => {
       if (!options.shadowDom) {
         waitForParentElements(context, () => connectToDom())
       } else {
         connectToDom()
       }
-    })
+    //})
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML
@@ -38,7 +38,7 @@ function advanced (context, options) {
 
       updateAttributes(...args)
       updateSlots(...args)
-      setData(...args, context.mj.new.data || runLifecycle(context, options, 'data') || {})
+      setData(...args, (context.mj.new && context.mj.new.data) || runLifecycle(context, options, 'data') || {})
       runLifecycle(context, options, 'ready')
       updateBody(...args)
 
