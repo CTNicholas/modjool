@@ -79,11 +79,13 @@ function attrObserver (context, options) {
   const observer = new MutationObserver(mutationList => {
     mutationList.forEach(mutation => {
       if (mutation.type === 'attributes' && context.mj.loaded) {
+        if (!mutation.attributeName.startsWith('mj-')) {
         attributeChanged.advanced(context, options, {
           attrName: mutation.attributeName,
           oldVal: mutation.oldValue,
           newVal: context.getAttribute(mutation.attributeName)
         })
+        }
       }
     })
   })

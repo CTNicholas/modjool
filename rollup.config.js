@@ -21,6 +21,7 @@ const plugins = [
    terser()
 ]
 
+// noinspection JSUnusedGlobalSymbols
 export default [{
   input: {
     modjool: 'src/index-umd.js'

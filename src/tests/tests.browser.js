@@ -1,3 +1,4 @@
+// noinspection NpmUsedModulesInstalled
 import { modjool } from 'modjool'
 console.log('Running tests')
 let tempBody = '<div><div>shadowDom false:</div><div>shadowDom true:</div></div>'
@@ -21,6 +22,7 @@ newElement({
   css: () => `*::before { content: '✅ ' }` /* If ticks on every element, this is not working */
 })
 
+// noinspection SpellCheckingInspection
 newElement({
   html: () => `<style>div.specificcsstest:before { content: '❌ css affecting element error'; }</style><div class="specificcsstest"></div>`,
   css: () => `div.specificcsstest:before { content: '✅ css affecting element works' !important; }`
@@ -41,7 +43,7 @@ newElement({
   js: ({ data, self }) => {
     data.result = self.id && self.tag && self.select()
   },
-  html: ({ data, self }) => `<div>${data.result ? '✅ self.tag, self.id, self.select works' : '❌ self.tag, self.id, self.select error'}`
+  html: ({ data }) => `<div>${data.result ? '✅ self.tag, self.id, self.select works' : '❌ self.tag, self.id, self.select error'}`
 })
 
 newElement({
@@ -72,7 +74,7 @@ newElement({
 })
 
 newElement({
-  data: ({ data }) => ({ text: '❌' }),
+  data: () => ({ text: '❌' }),
   ready: ({ data }) => { data.text += ' reactive data error' },
   js: ({ data }) => {
     setTimeout(() => { data.text = '✅ reactive data works' })
@@ -80,10 +82,11 @@ newElement({
   html: ({ data }) => `${data.text}`
 })
 
+// noinspection all
 newElement({
-  data: ({ data }) => ({ importantTest: '❌' }),
+  data: () => ({ importantTest: '❌' }),
   ready: ({ data }) => { data.importantTest += ' data hook error' },
-  data_importantTest: ({ data, oldVal, newVal }) => {
+  data_importantTest: ({ oldVal, newVal }) => {
     const success = oldVal === '❌' && newVal.endsWith('error')
     return success ? '✅ data hook works' : newVal
   },
@@ -109,14 +112,14 @@ newElement({
 
 newElement({
   data: () => ({ count: 0 }),
-  js: ({ data, elem, self }) => {
+  js: ({ data, elem }) => {
     elem.onclick = () => false
     data.count++
     setTimeout(() => {
       data.listen = elem.onclick()
     })
   },
-  complete: ({ data, elem, self }) => {
+  complete: ({ data, elem }) => {
     data.count++
     elem.onclick = () => true
   },
@@ -140,27 +143,27 @@ newElement({
 /* === Self tests ==================================================== */
 let selfUpdateTest = '❌ self.update() error'
 newElement({
-  js: ({ data, self }) => {
+  js: ({ self }) => {
     setTimeout(() => {
       selfUpdateTest = '✅ self.update() works'
       self.update()
     })
   },
-  html: ({ data }) => selfUpdateTest
+  html: () => selfUpdateTest
 })
 
 newElement({
-  js: ({ data, self }) => {
-    self.html(({ slot, self }) => slot)
+  js: ({ self }) => {
+    self.html(({ slot }) => slot)
   },
-  html: ({ data }) => `❌ self.html() error`
+  html: () => `❌ self.html() error`
 }, '✅ self.html() works')
 
 newElement({
-  ready: ({ data, self }) => {
+  ready: ({ self }) => {
     self.css(() => `div::before { content: '✅ ' }`)
   },
-  html: ({ data }) => `<div>self.css() works</div>`,
+  html: () => `<div>self.css() works</div>`,
   css: () => `div::before { content: '❌ ' }`
 })
 
@@ -180,7 +183,7 @@ newElement({
     })
     attr.test = 'hello'
   },
-  html: ({ attr, data }) => `${data.result}`
+  html: ({ data }) => `${data.result}`
 }, '')
 
 
@@ -203,6 +206,7 @@ newElement({
     result: '❌ reactive attr error'
   }})
 
+// noinspection JSUnusedGlobalSymbols
 newElement({
   data: () => ({ result: 0 }),
   js: ({ self }) => {
@@ -224,28 +228,29 @@ newElement({
     attr.result = '✅ change attr proxy works'
     data.result = self.element.getAttribute('result')
   },
-  html: ({ attr, data }) => `${data.result.length ? data.result : data.error}`
+  html: ({ data }) => `${data.result.length ? data.result : data.error}`
 }, '', { attr: {
     result: '❌ change attr proxy error'
   }})
 
 newElement({
-  js: ({ attr, data, self }) => {
+  js: ({ attr, data }) => {
     data.result = data.result ? data.result : '❌ attr MutationObserver lifecycle error'
     if (attr.result.startsWith('❌')) {
       attr.result = '✅ attr MutationObserver lifecycle works'
     }
   },
-  attr_result: ({ attr, data, self, oldVal, newVal }) => {
+  attr_result: ({ attr, data, oldVal, newVal }) => {
     if (oldVal && oldVal.startsWith('❌') && newVal.startsWith('✅')) {
       data.result = attr.result
     }
   },
-  html: ({ attr, data }) => `${data.result}`
+  html: ({ data }) => `${data.result}`
 }, '', { attr: {
     result: '❌ attr lifecycle error'
   }})
 
+// noinspection JSUnresolvedVariable
 newElement({
   html: ({ attr }) => `${attr.kebabCase || '❌ kebab to camel attr error'}`
 }, '', { attr: {
@@ -259,7 +264,7 @@ newElement({
       data.res = '✅ camel to kebab attr works'
     }
   },
-  html: ({ attr, data }) => `${data.res || '❌ camel to kebab attr error'}`
+  html: ({ data }) => `${data.res || '❌ camel to kebab attr error'}`
 }, '')
 
 
@@ -283,7 +288,9 @@ newElement({
   ready: ({ data, slot, slotVal }) => {
     data.diff = slot.icon !== slotVal.icon && slotVal.icon === slotVal.text
     data.error = `❌ multiple slotVals error`
-    if (!data.diff) console.log(`❌ multiple slotVals error \nslot: ${slot.icon} \nslotVal: ${slotVal.icon}`)
+    if (!data.diff) { // noinspection SpellCheckingInspection
+      console.log(`❌ multiple slotVals error \nslot: ${slot.icon} \nslotVal: ${slotVal.icon}`)
+    }
   },
   html: ({ data, slotVal }) => `
     ${data.diff ? slotVal.icon : data.error}
@@ -294,14 +301,17 @@ newElement({
   `
 }, '<span slot="icon"><span></span></span><span slot="text"><span></span></span>')
 
+// noinspection JSUnresolvedVariable
 newElement({
   html: ({ slot }) => slot.three ? '❌ nested slot ignored error' : slot.one + slot.two
 }, '<span slot="one">✅ <span slot="three"></span></span><span slot="two">nested slot ignored works</span>')
 
+// noinspection JSUnresolvedVariable
 modjool.create({
   tag: 'slot-nest-test-1',
   html: ({ slot }) => slot.two
 })
+// noinspection JSUnresolvedVariable
 newElement({
   html: ({ slot }) => slot.two || Object.keys(slot).length !== 2 ? '❌ nested slots error' : '✅ nested slots work'
 }, `<span slot="three">✅</span><span slot="four">nested slot ignored works</span><slot-nest-test-1>
@@ -350,12 +360,12 @@ modjool.create({
   html: () => `✅ init before nesting works`
 })
 newElement({
-  html: ({ slot }) => `<nest-test-1></nest-test-1>`
+  html: () => `<nest-test-1></nest-test-1>`
 }, '❌ init before nesting error')
 
 
 newElement({
-  html: ({ slot }) => `<nest-test-2></nest-test-2>`
+  html: () => `<nest-test-2></nest-test-2>`
 }, '❌ init after nesting error')
 modjool.create({
   tag: 'nest-test-2',
@@ -367,11 +377,11 @@ modjool.create({
   html: () => `❌ alternate nesting before error`
 })
 newElement({
-  html: ({ slot }) => `✅ alternate nesting before works`
+  html: () => `✅ alternate nesting before works`
 }, '<nest-test-3></nest-test-3>')
 
 newElement({
-  html: ({ slot }) => `✅ alternate nesting after works`
+  html: () => `✅ alternate nesting after works`
 }, '<nest-test-4></nest-test-4>')
 modjool.create({
   tag: 'nest-test-4',
@@ -379,7 +389,7 @@ modjool.create({
 })
 
 newElement({
-  html: ({ slot }) => `<nest-test-5-1></nest-test-5-1>`
+  html: () => `<nest-test-5-1></nest-test-5-1>`
 }, '❌ double nesting error')
 modjool.create({
   tag: 'nest-test-5-1',
@@ -399,13 +409,12 @@ newElement({
 
 let logTest1 = 0
 newElement({
-  enter: ({ self }) => {
+  enter: () => {
     console.log('✅ enter() works')
-    logTest1 = 1
+    logTest1++
   },
   ready: () => {
     if (logTest1 < 1) { console.log('❌ enter() error') }
-    logTest1 = 0
   }
 }, '')
 
@@ -416,7 +425,7 @@ newElement({
 })
 
 newElement({
-  enter: ({ data, self }) => {
+  enter: ({ self }) => {
     self.leave(() => console.log('✅ self.leave() works'))
   },
   ready: ({ self }) => self.remove(),
@@ -432,6 +441,23 @@ newElement({
     }
   }
 }, '')
+
+
+
+/* === Lifecycle example ======================================== */
+const exampleDelay = 100
+// noinspection all
+newElement({
+  enter: ({ self }) =>      setTimeout(() => console.log(`0 enter       ${self.tag} ${self.id}`), exampleDelay),
+  data: ({ self }) =>      (setTimeout(() => console.log(`1 data        ${self.tag} ${self.id}`), exampleDelay), { test: 'test' }),
+  ready: ({ self }) =>      setTimeout(() => console.log(`2 ready       ${self.tag} ${self.id}`), exampleDelay),
+  data_test: ({ self }) =>  setTimeout(() => console.log(`d data_[prop] ${self.tag} ${self.id}`), exampleDelay),
+  attr_test: ({ self }) =>  setTimeout(() => console.log(`a attr_[name] ${self.tag} ${self.id}`), exampleDelay),
+  js: ({ self }) =>         setTimeout(() => console.log(`3 js          ${self.tag} ${self.id}`), exampleDelay),
+  complete: ({ self }) =>   setTimeout(() => console.log(`4 complete    ${self.tag} ${self.id}`), exampleDelay),
+  html: ({ self }) =>      (setTimeout(() => console.log(`h html        ${self.tag} ${self.id}`), exampleDelay), ''),
+  css: ({ self }) =>       (setTimeout(() => console.log(`c css         ${self.tag} ${self.id}`), exampleDelay), ''),
+}, '', { attr: { test: 'value' } })
 
 
 
@@ -461,22 +487,18 @@ modjool.getAsync('a-1').then(a => {
 document.querySelector('.tests').innerHTML += tempBody
 
 function newElement(initObject, content = '', { tag = nextTag(), attr = {} } = {}) {
-  let attrs = []
   let attrString = ''
   for (const [key, val] of Object.entries(attr)) {
-    attrs.push(key)
     attrString += ` ${key}="${val}"`
   }
   modjool.create({
     tag: tag,
-    // attr: attrs,
     shadowDom: false,
     ...initObject
   })
   const tag2 = nextTag()
   modjool.create({
     tag: tag2,
-    // attr: attrs,
     shadowDom: true,
     ...initObject
   })

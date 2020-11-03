@@ -1,11 +1,12 @@
+// noinspection JSUnusedGlobalSymbols
 /**
  * Returns a series of functions passed to instance, for use in the modjool API
  * Functions: get, when, on, array, for
  * @param {ModjoolElement} context - The custom element
- * @param {Object} options - The custom element's options
  * @returns {Object} - The object containing the functions
  */
-export default function (context, options) {
+export default function (context) {
+  // noinspection JSUnusedGlobalSymbols
   return {
     /**
      * A shorter query selector
@@ -80,6 +81,7 @@ export default function (context, options) {
  * @param {Function} func - The function to be removed
  */
 function eventReturn (el, event, func) {
+  // noinspection JSUnusedGlobalSymbols
   return {
     element: el,
     type: event,

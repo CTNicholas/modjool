@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <h1 align="center">
   <span></span>
   <a href="https://modjool.js.org"><img alt="modjool - custom elements  & web components" src="https://modjool-docs.vercel.app/images/mj_logo.png" align="center"></a>

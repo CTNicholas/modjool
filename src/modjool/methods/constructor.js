@@ -1,7 +1,6 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
 import { attrObserver, attrProxy, dataProxy } from './proxies'
 import { runLifecycle, findFunction } from './utils.js'
-import instanceFunctions from './functions.js'
 import keywords from '../config/keywords.js'
 
 /**
@@ -29,7 +28,7 @@ function advanced (context, options) {
       return `${options.tag}[mj-id="${instanceId}"]${rule}`
     }
   }
-  context.mj = {}
+  // noinspection JSUnusedGlobalSymbols
   context.mj = {
     tag: options.tag,
     id: instanceId,
@@ -49,7 +48,6 @@ function advanced (context, options) {
       elem: {},
       find: findFunction(context, options),
       findAll: findFunction(context, options, true),
-      func: instanceFunctions(context, options),
       self: {
         id: instanceId,
         tag: options.tag,
@@ -103,11 +101,6 @@ function advanced (context, options) {
       ready: null,
     },
     options: options
-  }
-
-  // Set mj-id attribute, if enabled
-  if (options.modjoolId) {
-    context.setAttribute('mj-id', context.mj.id)
   }
 
   // Create reactive features

@@ -1,6 +1,4 @@
 import state from './state.js'
-import whenReady from './whenready.js'
-import { updateBody, updateSlots } from './methods/update.js'
 
 import CONSTRUCTOR from './methods/constructor.js'
 import OBSERVE from './methods/observe.js'
@@ -10,19 +8,22 @@ import CONNECTED from './methods/connected.js'
 import DISCONNECTED from './methods/disconnected.js'
 
 /**
- * Creates a ModjoolElement class, and defines it.
+ * Creates a ModjoolElement class, and returns the class.
  * All methods call either an advanced or simple function, depending on type.
  * @param {Object|String} options - Options for this element, a tag name string if simple
  * @param {Boolean} advancedApi - True if advanced API used, false if not
- * @returns {Boolean} - True if element successfully defined, false if not
+ * @returns {Object} - The defined class, tag, and options
  */
 function elementCreator (options, advancedApi) {
   const elementType = advancedApi ? 'advanced' : 'simple'
   
+  // noinspection JSUnusedGlobalSymbols
   class ModjoolElement extends HTMLElement {
     // Invoked instantly
     constructor (...args) {
+      // noinspection all
       const polyfill = super(...args)
+      this.mj = {}
       CONSTRUCTOR[elementType](this, options)
       return polyfill
     }
@@ -50,21 +51,15 @@ function elementCreator (options, advancedApi) {
     // Invoked when element removed from DOM
     disconnectedCallback () {
       DISCONNECTED[elementType](this, options)
+      this.mj = {}
     }
   }
 
-  try {
-    if (elementType === 'advanced') {
-      // If advanced element, define element with options.tag
-      customElements.define(options.tag, ModjoolElement)
-      return !!customElements.get(options.tag)
-    } else {
-      // If simple element, define element with options (the tag name string)
-      customElements.define(options, ModjoolElement)
-      return !!customElements.get(options)
-    }
-  } catch (err) {
-    console.error(err)
+  // noinspection JSUnresolvedVariable
+  return {
+    tag: advancedApi ? options.tag : options,
+    options: options,
+    class: ModjoolElement
   }
 }
 
@@ -72,11 +67,11 @@ function elementCreator (options, advancedApi) {
  * Combines options with default, waits until page is ready, then runs elementCreator
  * @param {Boolean} advancedApi - True if advanced API used, false if not
  * @param {Object|String} options - Options for this element, a tag name string if simple
- * @returns {Boolean} - True if element successfully defined, false if not
+ * @returns {Object} - The defined class, tag, and options
  */
 export default function (options, advancedApi) {
   if (advancedApi) {
     options = { ...state.config, ...options }
   }
-  return whenReady(() => elementCreator(options, advancedApi))
+  return elementCreator(options, advancedApi)
 }

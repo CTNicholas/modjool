@@ -1,10 +1,10 @@
 import { modjool } from '../index-umd.js'
 
-const CLASS_NAME = 'ModjoolElement'
 let count = 1
 
+// noinspection JSUnresolvedFunction
 test('modjool initialised', () => {
-  const el = newElement({
+  newElement({
     html: () => `hi`
   }, 'hello')
   expect(document.body.innerHTML.includes('mj-id')).toBe(true)

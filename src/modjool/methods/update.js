@@ -24,6 +24,7 @@ function updateAll (...args) {
  */
 function updateNew (context, options, vals) {
   for (const [apiProp, newVal] of Object.entries(vals)) {
+    // noinspection JSUnresolvedVariable
     context.mj.new[apiProp] = newVal
     updateBody(context, options)
   }

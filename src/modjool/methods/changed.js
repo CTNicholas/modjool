@@ -16,10 +16,10 @@ import { updateBody, updateAttributes } from './update.js'
  */
 function advanced (context, options, { attrName, oldVal = '', newVal = '' }) {
   const args = [context, options]
-  if (context.mj.loaded && oldVal !== newVal) {
+  if (context.mj.loaded === true && oldVal !== newVal) {
     const lifecycleName = 'attr_' + kebabToCamel(attrName)
     updateAttributes(...args)
-    runLifecycle(...args, lifecycleName, { oldVal, newVal })
+    runLifecycle(context, options, lifecycleName, { oldVal, newVal })
     if (!context.mj.runningLifecycle) {
       updateBody(...args)
       runLifecycle(...args, 'complete')

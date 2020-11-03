@@ -2,15 +2,18 @@ import { modjoolLite } from '../index-umd.js'
 
 const CLASS_NAME = 'ModjoolLiteElement'
 
+// noinspection JSUnresolvedFunction
 test('undefined element', () => {
   expect(isDefined('not-defined-lite')).toBe(false)
 })
 
+// noinspection JSUnresolvedFunction
 test('single simple element', () => {
-  const el = modjoolLite.create('hello-there')
+  modjoolLite.create('hello-there')
   expect(isDefined('hello-there')).toBe(true)
 })
 
+// noinspection JSUnresolvedFunction
 test('multiple simple elements', () => {
   const els = modjoolLite.create('l2-1', 'l2-2', 'l2-3')
   expect(areDefined(els)).toBe(true)

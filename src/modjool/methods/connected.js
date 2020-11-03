@@ -1,4 +1,5 @@
 import state from '../state.js'
+import whenReady from '../whenready'
 import { runLifecycle } from './utils.js'
 import { updateBody, updateSlots, updateAttributes } from './update.js'
 
@@ -23,20 +24,24 @@ function advanced (context, options) {
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
 
-    if (!options.shadowDom) {
-      waitForParentElements(context, () => connectToDom())
-    } else {
-      connectToDom()
-    }
+    whenReady(() => {
+      if (!options.shadowDom) {
+        waitForParentElements(context, () => connectToDom())
+      } else {
+        connectToDom()
+      }
+    })
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML
+      initPrivateId(...args)
+
       updateAttributes(...args)
       updateSlots(...args)
       setData(...args, context.mj.new.data || runLifecycle(context, options, 'data') || {})
       runLifecycle(context, options, 'ready')
       updateBody(...args)
-      
+
       unhideElement(...args)
       context.mj.loaded = true
 
@@ -165,6 +170,17 @@ function waitForParentElements (context, func) {
         console.error(err)
       }
     }
+  }
+}
+
+/**
+ * If options.id is true, set mj-id attribute to context.mj.id value
+ * @param {ModjoolElement} context
+ * @param {Object} options
+ */
+function initPrivateId (context, options) {
+  if (options.modjoolId) {
+    context.setAttribute('mj-id', context.mj.id)
   }
 }
 

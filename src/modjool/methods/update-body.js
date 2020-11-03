@@ -96,7 +96,7 @@ function deleteElementHtml (body) {
 
 /**
  * Adds custom element selector to css and returns
- * @param {String}  selfSelect - CSS selector for self
+ * @param {Function}  selfSelect - CSS selector function for self
  * @param {String} css - CSS to change
  * @returns {String} - The updated CSS
  */

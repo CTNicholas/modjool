@@ -6,13 +6,13 @@
  *   3. If property in options, run it, and pass extra properties to instance, if set
  *   4. Else (the property has not been set), return null
  * @param {ModjoolElement} context
- * @param {Object} context.mj - The custom element's mj property
  * @param {Object} options - The custom element's options
  * @param {String} apiProp - The name of the API property
  * @param {Object} extra - Any extra properties to be passed to the API method
  * @returns {null|Object} - Null if failed, otherwise function result or {} if no result
  */
-function runLifecycle ({ mj }, options, apiProp, extra = false) {
+function runLifecycle (context, options, apiProp, extra = false) {
+  const { mj } = context
   let result = null
   let alreadyRunningLifecycle = mj.runningLifecycle
 

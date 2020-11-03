@@ -34,6 +34,7 @@ export default {
    * @returns {Array} - Array of selected elements
    */
   getElements (elementTag) {
+  // noinspection JSIncompatibleTypesComparison
     return elementTag ? this.elements.filter(el => el.mj.tag === elementTag) : this.elements
   }
 }

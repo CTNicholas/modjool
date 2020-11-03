@@ -13,7 +13,6 @@ function advanced (context, options) {
   if (context.mj.observer && context.mj.observer.disconnect) {
     context.mj.observer.disconnect()
   }
-  context.mj = {}
   state.removeElement(context)
 }
 

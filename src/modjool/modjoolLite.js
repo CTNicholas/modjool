@@ -17,15 +17,19 @@ function create (...options) {
 /**
  * Creates and defines a ModjoolLite element
  * @param {String} elementName - The tag of the custom element
- * @returns {Boolean} - True if successful, false if not
+ * @returns {Object} - The defined class, tag, and options
  */
 function modjoolLiteElement (elementName) {
+  // noinspection JSUnusedLocalSymbols
   class ModjoolLiteElement extends HTMLElement {
     constructor (...args) {
-      const polyfill = super(...args)
-      return polyfill
+      // noinspection all
+      return super(...args)
     }
   }
-  customElements.define(elementName, ModjoolLiteElement)
-  return !!customElements.get(elementName)
+  return {
+    tag: elementName,
+    options: elementName,
+    class: ModjoolLiteElement
+  }
 }

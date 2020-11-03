@@ -6,7 +6,6 @@
 function updateSlots (context, options) {
   if (context.isConnected) {
     const { slot, slotVal } = getSlotContent(context, options)
-    context.slotConnected = true
     context.mj.instance.slot = slot
     context.mj.instance.slotVal = slotVal
   }
