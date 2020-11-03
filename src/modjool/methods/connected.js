@@ -1,5 +1,4 @@
 import state from '../state.js'
-import whenReady from '../whenready'
 import { runLifecycle } from './utils.js'
 import { updateBody, updateSlots, updateAttributes } from './update.js'
 
@@ -24,13 +23,11 @@ function advanced (context, options) {
   if (!context.mj.alreadyConnected) {
     context.mj.alreadyConnected = true
 
-    //whenReady(() => {
-      if (!options.shadowDom) {
-        waitForParentElements(context, () => connectToDom())
-      } else {
-        connectToDom()
-      }
-    //})
+    if (!options.shadowDom) {
+      waitForParentElements(context, () => connectToDom())
+    } else {
+      connectToDom()
+    }
 
     function connectToDom () {
       context.mj.bodyContent = context.innerHTML

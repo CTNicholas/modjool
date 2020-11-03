@@ -24,7 +24,7 @@ export default {
  *   2. An array of strings for the simple API
  *   3. A single object for the advanced API
  *   4. A single string for the simple API
- * @returns {Object|Array<Object>} - Options object(s)
+ * @returns {Promise<Object|Array<Object>>} - Options object(s)
  */
 function create (...options) {
   return createElement(ModjoolElement, options, true)
@@ -33,13 +33,18 @@ function create (...options) {
 /**
  * Creates classes for one or more Modjool elements, using the advanced or simple API
  * Returns ModjoolElement class, or array of ModjoolElement classes
- * Returned class can be used in customElements.define('tag-name', returnedClass)
+ * Return value wrapped in Promise
+ * Returned class can be used in customElements.define:
+ *
+ * modjool.createClass('tag-name').then(modjoolClass => {
+ *   customElements.define('tag-name', modjoolClass)
+ * }
  * @param  {...Array|Object|String} options - One of four inputs:
  *   1. An array of objects for the advanced API
  *   2. An array of strings for the simple API
  *   3. A single object for the advanced API
  *   4. A single string for the simple API
- * @returns {Class|Array<Class>} - ModjoolElement class
+ * @returns {Promise<Class|Array<Class>>} - ModjoolElement class
  */
 function createClass (...options) {
   return createElement(ModjoolElement, options, false)
@@ -47,7 +52,7 @@ function createClass (...options) {
 
 /**
  * Defines all non-defined custom elements
- * @returns {Boolean} - True
+ * @returns {Promise<Boolean>} - True
  */
 function createUndefined () {
   return createElement(ModjoolElement, [], true)

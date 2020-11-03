@@ -1,4 +1,5 @@
 import state from './state.js'
+import whenReady from './whenready'
 
 import CONSTRUCTOR from './methods/constructor.js'
 import OBSERVE from './methods/observe.js'
@@ -73,5 +74,12 @@ export default function (options, advancedApi) {
   if (advancedApi) {
     options = { ...state.config, ...options }
   }
-  return elementCreator(options, advancedApi)
+
+  // return elementCreator(options, advancedApi)
+  // noinspection JSUnusedLocalSymbols
+  return new Promise((resolve, reject) => {
+    whenReady(() => {
+      resolve(elementCreator(options, advancedApi))
+    })
+  })
 }
