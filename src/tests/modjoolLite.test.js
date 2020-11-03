@@ -1,4 +1,4 @@
-import { modjoolLite } from '../src/index-umd.js'
+import { modjoolLite } from '../index-umd.js'
 
 const CLASS_NAME = 'ModjoolLiteElement'
 

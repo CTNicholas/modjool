@@ -1,4 +1,4 @@
-import { modjool } from '../src/index-umd.js'
+import { modjool } from '../index-umd.js'
 
 const CLASS_NAME = 'ModjoolElement'
 let count = 1

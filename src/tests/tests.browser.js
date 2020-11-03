@@ -175,7 +175,9 @@ newElement({
 newElement({
   ready: ({ attr, data, self }) => {
     data.result = '❌ self.attrHook() error'
-    self.attrHook('test', () => data.result = '✅ self.attrHook() works')
+    self.attrHook('test', () => {
+      data.result = '✅ self.attrHook() works'
+    })
     attr.test = 'hello'
   },
   html: ({ attr, data }) => `${data.result}`
@@ -209,7 +211,7 @@ newElement({
   },
   attr_result: ({ data }) => { data.result++ },
   attr_resultTwo: ({ data }) => { data.result++ },
-  html: ({ data }) => `${data.result === 2 ? '✅ attrHook works' : '❌ attrHook error'}`
+  html: ({ data }) => `${data.result === 4 ? '✅ attrHook works' : '❌ attrHook error'}`
 }, '', { attr: {
     result: 'one',
     ['result-two']: 'two'
@@ -235,7 +237,7 @@ newElement({
     }
   },
   attr_result: ({ attr, data, self, oldVal, newVal }) => {
-    if (oldVal.startsWith('❌') && newVal.startsWith('✅')) {
+    if (oldVal && oldVal.startsWith('❌') && newVal.startsWith('✅')) {
       data.result = attr.result
     }
   },
