@@ -1,7 +1,7 @@
 {
   "name": "modjool",
-  "version": "0.9.19",
-  "description": "Easy custom elements, with Modjool",
+  "version": "1.0.0",
+  "description": "Tiny, elegant, enjoyable. Ideal for creating user interface libraries & reusable web components.",
   "homepage": "https://modjool.org.js",
   "repository": "github:CTNicholas/modjool",
   "bugs": {
@@ -15,7 +15,7 @@
     "test": "jest --watch"
   },
   "author": "CTNicholas",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "core-js": "^3.6.5",
@@ -31,9 +31,9 @@
     "rollup-plugin-terser": "^7.0.0"
   },
   "keywords": [
+    "modjool",
     "custom elements",
     "web components",
-    "modjool",
     "UI elements",
     "UX",
     "UI/UX",

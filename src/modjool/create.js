@@ -72,12 +72,14 @@ function createSingle (createElement, options, define = true) {
  * @param {Function} createElement - Function to build ModjoolElement or ModjoolLiteElement
  * @returns {Promise} - List of all successfully defined custom element options objects
  */
+const definedEls = []
 function defineAll(createElement) {
   const notDefined = document.querySelectorAll(':not(:defined)')
   const list = []
   for (const el of notDefined) {
-    if (!list.includes(el.tagName)) {
-      const tag = el.tagName.toLowerCase() || el.nodeName.toLowerCase() || el.localName
+    const tag = el.tagName.toLowerCase() || el.nodeName.toLowerCase() || el.localName
+    if (!list.includes(tag) && !definedEls.includes(tag)) {
+      definedEls.push(tag)
       list.push(tag)
     }
   }
