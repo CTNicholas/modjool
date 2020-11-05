@@ -5,7 +5,7 @@
   <br/>
 </h1>
 
-<p align="center" style="text-align:center">[![npm](https://img.shields.io/npm/v/modjool?style=flat-square)](https://www.npmjs.com/package/modjool) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/modjool?color=%2346C018&label=minzip&style=flat-square)](https://bundlephobia.com/result?p=modjool@latest) <!--[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)--> [![NPM](https://img.shields.io/npm/l/modjool?color=%2346C018&style=flat-square)](https://www.npmjs.com/package/modjool) <!--[![GitHub last commit](https://img.shields.io/github/last-commit/CTNicholas/modjool?color=%2346C018&style=flat-square)](https://github.com/CTNicholas/modjool/)--></p>
+<span align="center" style="text-align:center">[![npm](https://img.shields.io/npm/v/modjool?style=flat-square)](https://www.npmjs.com/package/modjool) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/modjool?color=%2346C018&label=minzip&style=flat-square)](https://bundlephobia.com/result?p=modjool@latest) <!--[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)--> [![NPM](https://img.shields.io/npm/l/modjool?color=%2346C018&style=flat-square)](https://www.npmjs.com/package/modjool) <!--[![GitHub last commit](https://img.shields.io/github/last-commit/CTNicholas/modjool?color=%2346C018&style=flat-square)](https://github.com/CTNicholas/modjool/)--></span>
 
 # [Documentation](https://modjool.js.org)
 Full guide & documentation available at the [Modjool Docs](https://modjool.js.org) website.
