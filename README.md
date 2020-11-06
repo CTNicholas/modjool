@@ -5,9 +5,9 @@
   <br/>
 </h1>
 
-<div align="center" style="text-align:center">
-[![npm](https://img.shields.io/npm/v/modjool?style=flat-square)](https://www.npmjs.com/package/modjool) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/modjool?color=%2346C018&label=minzip&style=flat-square)](https://bundlephobia.com/result?p=modjool@latest) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com) [![NPM](https://img.shields.io/npm/l/modjool?color=%2346C018&style=flat-square)](https://www.npmjs.com/package/modjool) <!--[![GitHub last commit](https://img.shields.io/github/last-commit/CTNicholas/modjool?color=%2346C018&style=flat-square)](https://github.com/CTNicholas/modjool/)-->
-</div>
+<p align="center" style="text-align:center">
+  <a href="https://www.npmjs.com/package/modjool"><img src="https://img.shields.io/npm/v/modjool?style=flat-square" alt="npm"></a> <a href="https://bundlephobia.com/result?p=modjool@latest"><img src="https://img.shields.io/bundlephobia/minzip/modjool?color=%2346C018&amp;label=minzip&amp;style=flat-square" alt="npm bundle size"></a> <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square" alt="JavaScript Style Guide"></a> <a href="https://www.npmjs.com/package/modjool"><img src="https://img.shields.io/npm/l/modjool?color=%2346C018&amp;style=flat-square" alt="NPM"></a> <!--[![GitHub last commit](https://img.shields.io/github/last-commit/CTNicholas/modjool?color=%2346C018&style=flat-square)](https://github.com/CTNicholas/modjool/)-->
+</p>
 
 # [Documentation](https://modjool.js.org)
 Full guide & documentation available at the [Modjool Docs](https://modjool.js.org) website.
