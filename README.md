@@ -1,16 +1,20 @@
-<!--suppress ALL -->
-<h1 align="center" style="text-align:center">
+<!-- suppress ALL -->
+<h1>
   <span></span>
   <a href="https://modjool.js.org"><img alt="modjool - custom elements  & web components" src="https://modjool-docs.vercel.app/images/mj_logo.png" align="center"></a>
   <br/>
 </h1>
 
-<p align="center" style="text-align:center">
+<p>
   <a href="https://www.npmjs.com/package/modjool"><img src="https://img.shields.io/npm/v/modjool?style=flat-square" alt="npm"></a> <a href="https://bundlephobia.com/result?p=modjool@latest"><img src="https://img.shields.io/bundlephobia/minzip/modjool?color=%2346C018&amp;label=minzip&amp;style=flat-square" alt="npm bundle size"></a> <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square" alt="JavaScript Style Guide"></a> <a href="https://www.npmjs.com/package/modjool"><img src="https://img.shields.io/npm/l/modjool?color=%2346C018&amp;style=flat-square" alt="NPM"></a> <!--[![GitHub last commit](https://img.shields.io/github/last-commit/CTNicholas/modjool?color=%2346C018&style=flat-square)](https://github.com/CTNicholas/modjool/)-->
 </p>
 
 # [Documentation](https://modjool.js.org)
 Full guide & documentation available at the [Modjool Docs](https://modjool.js.org) website.
+
+## Latest update
+**v1.1** - New `findSlot` instance param, enabling easy creation of [headless components](https://modjool.js.org/docs/headless-components). 
+
 
 # Introduction
  Modjool is a lightweight JavaScript framework for creating user interface libraries

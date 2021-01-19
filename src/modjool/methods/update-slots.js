@@ -5,16 +5,17 @@
  */
 function updateSlots (context, options) {
   if (context.isConnected) {
-    const { slot, slotVal } = getSlotContent(context, options)
+    const { slot, slotVal, slotElem } = getSlotContent(context, options)
     context.mj.instance.slot = slot
     context.mj.instance.slotVal = slotVal
+    context.mj.instance.slotElem = slotElem
   }
 }
 
 export { updateSlots }
 
 /**
- * Gets slot and slotVal content. If multiple slots, return an object with 
+ * Gets slot and slotVal content. If multiple slots, return an object with
  * slot names as properties. Only top-level elements returned as slots.
  * Explained:
  *   slot: HTML required to output the current slot in html() or css()
@@ -26,7 +27,9 @@ export { updateSlots }
 function getSlotContent (context, options) {
   let slot
   let slotVal
+  let slotElem
   const tempId = 'mj-8Wi7fiDtPtAWMhLQop1Smg'
+  context.mj.bodyContent = context.mj.bodyContent.trim()
   const bodyFrag = createElement(context.mj.bodyContent, tempId)
   const slotList = bodyFrag.querySelectorAll(`#${tempId} > [slot]`)
 
@@ -34,6 +37,7 @@ function getSlotContent (context, options) {
     // Multiple slots
     slot = {}
     slotVal = {}
+    slotElem = {}
 
     for (const s of slotList) {
       const slotName = s.getAttribute('slot')
@@ -43,11 +47,13 @@ function getSlotContent (context, options) {
 
   } else {
     // Single slot
-    const shadowSlot = context.mj.bodyContent.length ? '<slot></slot>' : ''
+    const hasContent = context.mj.bodyContent.length
+    const shadowSlot = hasContent ? '<slot></slot>' : ''
+    const normalSlot = hasContent ? `<slot>${context.mj.bodyContent}</slot>` : context.mj.bodyContent
     slotVal = context.mj.bodyContent
-    slot = options.shadowDom ? shadowSlot : context.mj.bodyContent
+    slot = options.shadowDom ? shadowSlot : normalSlot
   }
-  return { slot, slotVal }
+  return { slot, slotVal, slotElem }
 }
 
 /**

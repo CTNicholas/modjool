@@ -352,6 +352,66 @@ newElement({
   html: ({ data, slot }) => `<span></span><span></span>${data.text || slot}`
 }, '❌ find querySelector error')
 
+newElement({
+  js: ({ data, findSlot }) => {
+    data.res = findSlot`` && findSlot``.getAttribute('data-test') === 'hi' ? '✅ findSlot with el slot works' : '❌ findSlot with el slot error'
+  },
+  html: ({ data, slot }) => `${slot}${data.res}`
+}, '<div data-test="hi"></div>')
+
+newElement({
+  js: ({ findSlot, self }) => {
+    const result = findSlot`` && findSlot``.getAttribute('data-test') === 'hi'
+    if (result) {
+      self.html(() => '✅ findSlot with no defined slot works')
+    }
+  }
+}, '<span data-test="hi">❌ findSlot with no defined slot error</span>')
+
+newElement({
+  js: ({ findSlot, self }) => {
+    const result = findSlot`` === undefined
+    if (result) {
+      self.html(() => '✅ findSlot with zero slots works')
+    }
+  },
+  html: () => `❌ findSlot with zero slots error`
+})
+
+newElement({
+  js: ({ data, findSlot }) => {
+    data.res = findSlot`` === undefined ? '✅ findSlot with no el works' : '❌ findSlot with no el error'
+  },
+  html: ({ data }) => `${data.res}`
+}, 'a test slot')
+
+newElement({
+  js: ({ findSlot }) => {
+    findSlot`one`.innerHTML = '✅ findSlot with multiple works'
+  },
+  html: ({ slot }) => `
+    ${slot.one}${slot.two}
+  `
+}, '<span slot="one">❌ findSlot with multiple error</span><span slot="two"></span>')
+
+newElement({
+  js: ({ data, findSlot, self }) => {
+    const result = findSlot`one` && findSlot`one`.getAttribute('data-test') === 'hi'
+    if (result) {
+      self.html(() => '✅ findSlot multi no defined slot works')
+    }
+  }
+}, '<span slot="one" data-test="hi">❌ findSlot multi no defined slot error</span><span slot="two"></span>')
+
+newElement({
+  js: ({ data, findSlot, self }) => {
+    const result = findSlot`` && findSlot``.length === 3 && findSlot``[0].getAttribute('data-test') === 'hi'
+    if (result) {
+      self.html(() => '✅ findSlot multi no argument works')
+    }
+  }
+}, '<span slot="one" data-test="hi">❌ findSlot multi no argument error</span><span slot="two"></span><span slot="three"></span>')
+
 
 
 /* === Nesting ==================================================== */
@@ -464,13 +524,14 @@ newElement({
 /* === Method tests ==================================================== */
 modjool.wait().then(() => {
   const notDef1 = document.querySelectorAll(':not(:defined)')
-  modjool.create()
-  const notDef2 = document.querySelectorAll(':not(:defined)')
-  if (notDef1.length > 0 && notDef2.length === 0) {
-    console.log('✅ auto-define create() works')
-  } else {
-    console.log('❌ auto-define create() error')
-  }
+  modjool.create().then(res => {
+    const notDef2 = document.querySelectorAll(':not(:defined)')
+    if (notDef1.length > 0 && notDef2.length === 0) {
+      console.log('✅ auto-define create() works')
+    } else {
+      console.log('❌ auto-define create() error')
+    }
+  })
 })
 
 modjool.getAsync('a-1').then(a => {

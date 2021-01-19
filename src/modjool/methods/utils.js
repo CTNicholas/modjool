@@ -49,19 +49,43 @@ function runLifecycle (context, options, apiProp, extra = false) {
  */
 function findFunction (context, options, findAll = false) {
   return function (strings, ...values) {
-    let str
-    if (typeof strings === 'string' || strings instanceof String) {
-      str = strings
-    } else {
-      // Build template string
-      str = strings[0]
-      for (let i = 0; i < values.length; i++) {
-        str += values[i] + strings[i + 1]
-      }
-    }
+    const str = buildTemplateString(strings, values)
     return findAll ? context.mj.body.querySelectorAll(str) : context.mj.body.querySelector(str)
   }
 }
+
+/**
+ * Returns the slot element passed to the function as a tagged template function string
+ * Return value:
+ *   If the element has multiple slots:
+ *     And an argument is used: The slot element with the given name is returned, if it exists
+ *     No argument is used: A NodeArray of slot elements is returned
+ *     Otherwise: undefined is returned
+ *
+ *   If the element has a single slot (argument always ignored):
+ *     And the slot has a single containing HTML tag: This element is returned, if it exists
+ *     The slot has no containing element: undefined is returned
+ *
+ * @param {ModjoolElement} context - The custom element
+ * @param {Object} options - The custom element's options
+ * @returns {function(String|Array, ...[String]): *}
+ */
+function findSlotFunction (context, options) {
+  return function (strings = '', ...values) {
+    const str = buildTemplateString(strings, values)
+    const slots = context.mj.instance.slot
+    const multiSlot = typeof slots === 'object' && slots !== null
+
+    if (multiSlot) {
+      return str.length ? context.querySelector(`[slot=${str}]`) : context.querySelectorAll('[slot]')
+    }
+
+    const shadowElem = context.children[0] || undefined
+    const normalElem = context.querySelector('slot > *') || context.querySelector(':first-child') || undefined
+    return options.shadowDom ? shadowElem : normalElem
+  }
+}
+
 
 /**
  * Converts kebab-case to camelCase
@@ -81,7 +105,21 @@ const kebabToCamel = kebabCamelCache()
  */
 const camelToKebab = kebabCamelCache(true)
 
-export { runLifecycle, findFunction, kebabToCamel, camelToKebab }
+export { runLifecycle, findFunction, findSlotFunction, kebabToCamel, camelToKebab }
+
+function buildTemplateString (strings, values) {
+  let str
+  if (typeof strings === 'string' || strings instanceof String) {
+    str = strings
+  } else {
+    // Build template string
+    str = strings[0]
+    for (let i = 0; i < values.length; i++) {
+      str += values[i] + strings[i + 1]
+    }
+  }
+  return str
+}
 
 /**
  * Creates a cache of kebab-case to camelCase conversions, and vice-versa

@@ -1,21 +1,21 @@
 import { updateBody, updateSlots, updateAll, updateNew, updateAttributes } from './update.js'
 import { attrObserver, attrProxy, dataProxy } from './proxies'
-import { runLifecycle, findFunction } from './utils.js'
+import { runLifecycle, findFunction, findSlotFunction } from './utils.js'
 import keywords from '../config/keywords.js'
 
 /**
  * Initialises the custom element's mj property, builds shadow DOM,
  * then runs enter() lifecycle event
- * 
+ *
  * Runs when the custom element's constructor is called
- * 
- * Properties of mj to note: 
+ *
+ * Properties of mj to note:
  *   - body, refers to the shadow DOM (if enabled), or the current element
  *   - instance, the object sent to the modjool custom element hooks
  *     - Includes attr, data, func, self, slot, slotVal
  *     - Self contains a number of methods relating to the current body of the element
  *   - new, if new API values have been manually set for the element, they are here
- * 
+ *
  * @param {ModjoolElement} context - The custom element
  * @param {Object} options - The custom element's options
  */
@@ -48,6 +48,7 @@ function advanced (context, options) {
       elem: {},
       find: findFunction(context, options),
       findAll: findFunction(context, options, true),
+      findSlot: findSlotFunction(context, options),
       self: {
         id: instanceId,
         tag: options.tag,
