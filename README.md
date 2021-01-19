@@ -13,7 +13,7 @@
 Full guide & documentation available at the [Modjool Docs](https://modjool.js.org) website.
 
 ## Latest update
-**v1.1** - New `findSlot` instance param, enabling easy creation of [headless components](https://modjool.js.org/docs/headless-components). 
+**v1.1** - Added [findSlot instance param](https://modjool.js.org/docs/slots#slot-elements), enabling easy creation of [headless components](https://modjool.js.org/docs/headless-components). 
 
 
 # Introduction
